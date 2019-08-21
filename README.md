@@ -1,2 +1,2 @@
-# Python-hehe
+# jednak nie python
 Takie tam
