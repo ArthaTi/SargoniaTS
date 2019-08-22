@@ -1,7 +1,8 @@
 import { actions } from "..";
+import { wrap } from "../utils";
 
-actions["404"] = (_request, response) => {
+actions["404"] = context => {
 
-    response.write("Ta strona nie istnieje.");
+    context.content += wrap("p", "Ta strona nie istnieje.");
 
 };

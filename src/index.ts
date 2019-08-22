@@ -1,8 +1,9 @@
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { promises as fs } from "fs";
 import glob from "glob";
+import Context from "./Context";
 
-type Listener = (request: IncomingMessage, response: ServerResponse) => void;
+type Listener = (context: Context) => void;
 
 /**
  * Mapping of strings to functions responding to certain requests.
@@ -55,16 +56,24 @@ const res = __dirname + "/../res";
             // Get the action name from the URL
             let name = request.url!.split("/", 2)[1];
 
+            // Create the context
+            let context: Context = {
+
+                url: request.url!,
+                content: "",
+
+            };
+
             // If the name is bound
             if (name in actions) {
 
                 // Call the bound function
-                actions[name](request, response);
+                actions[name](context);
 
             } else {
 
                 // Call the placeholder
-                actions["404"](request, response);
+                actions["404"](context);
 
             }
 

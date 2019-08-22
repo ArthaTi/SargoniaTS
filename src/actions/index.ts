@@ -1,7 +1,8 @@
 import { actions } from "..";
+import { wrap } from "../utils";
 
-actions[""] = (_request, response) => {
+actions[""] = context => {
 
-    response.write("Witaj w Sargonii!");
+    context.content += wrap("p", "Witaj w Sargonii!");
 
 };
