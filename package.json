@@ -1,0 +1,26 @@
+{
+  "name": "sargonia-ts",
+  "version": "1.0.0",
+  "description": "Takie tam",
+  "main": "out/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SirErico/SargoniaTS.git"
+  },
+  "author": "Erico",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/SirErico/SargoniaTS/issues"
+  },
+  "homepage": "https://github.com/SirErico/SargoniaTS#readme",
+  "devDependencies": {
+    "@types/node": "^12.7.2",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "eslint": "^6.2.1",
+    "typescript": "^3.5.3"
+  }
+}
