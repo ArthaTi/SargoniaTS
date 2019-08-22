@@ -2,6 +2,7 @@ import { Server, IncomingMessage, ServerResponse } from "http";
 import { promises as fs } from "fs";
 import glob from "glob";
 import Context from "./Context";
+import template from "./template";
 
 type Listener = (context: Context) => void;
 
@@ -76,6 +77,9 @@ const res = __dirname + "/../res";
                 actions["404"](context);
 
             }
+
+            // Output the template
+            response.write(template(context));
 
         }
 

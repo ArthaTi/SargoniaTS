@@ -1,5 +1,5 @@
-export function wrap(element: string, content: string) {
+export function wrap(element: string, ...content: string[]) {
 
-    return `<${element}>${content}</${element}>`;
+    return `<${element}>${content.join("")}</${element}>`;
 
 }
