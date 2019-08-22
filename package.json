@@ -17,10 +17,12 @@
   },
   "homepage": "https://github.com/SirErico/SargoniaTS#readme",
   "devDependencies": {
+    "@types/glob": "^7.1.1",
     "@types/node": "^12.7.2",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "eslint": "^6.2.1",
+    "glob": "^7.1.4",
     "typescript": "^3.5.3"
   }
 }
