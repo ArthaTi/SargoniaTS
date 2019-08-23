@@ -14,6 +14,15 @@ type Listener = (context: Context) => void;
  */
 export let actions: { [path: string]: Listener } = {};
 
+/**
+ * A mapping of extensions to MIME types
+ */
+export let mimeTypes: { [extension: string]: string } = {
+    "css": "text/css; charset=utf-8",
+    "js": "text/javascript; charset=utf-8",
+    "json": "application/json",
+};
+
 // Create the server
 let server = new Server();
 let host = "localhost", port = 8080;
@@ -43,13 +52,21 @@ const res = __dirname + "/../res";
             // Try opening a file in /res
             let file = await fs.readFile(res + request.url);
 
+            // The file exists, get the extension
+            let extension = request.url!.match(/\.(\w+)$/) || [];
+
+            // Send the MIME type
+            response.setHeader("Content-Type", mimeTypes[extension[1]] || "text/plain; charset=utf-8");
+
             // Write the contents
             response.write(file.toString());
 
         }
 
         // Nope, the file doesn't exist
-        catch {
+        catch (error) {
+
+            console.log("Error:", error);
 
             // Send HTML header
             response.setHeader("Content-Type", "text/html;charset=utf-8");
