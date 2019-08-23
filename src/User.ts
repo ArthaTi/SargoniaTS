@@ -4,7 +4,7 @@ export default class User {
 
     id!: number;
 
-    constructor(public name: string = "", public pass: string = "") {
+    constructor(public name: string = "", public passwordHash: string = "") {
 
         this.id = ++User.lastID;
 
