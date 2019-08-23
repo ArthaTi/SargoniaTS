@@ -66,8 +66,6 @@ const res = __dirname + "/../res";
         // Nope, the file doesn't exist
         catch (error) {
 
-            console.log("Error:", error);
-
             // Send HTML header
             response.setHeader("Content-Type", "text/html;charset=utf-8");
 
