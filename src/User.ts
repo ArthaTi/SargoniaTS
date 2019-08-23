@@ -1,12 +1,11 @@
 export default class User {
-    
+
     static lastID: number = 0;
 
     id!: number;
-    name!: string;
-    pass!: string;
-   
-    constructor() {
+
+    constructor(public name: string = "", public pass: string = "") {
+
         this.id = ++User.lastID;
 
     }
