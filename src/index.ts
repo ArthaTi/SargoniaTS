@@ -3,6 +3,7 @@ import { promises as fs } from "fs";
 import glob from "glob";
 import Context from "./Context";
 import template from "./template";
+import User from "./User";
 
 type Listener = (context: Context) => void;
 
@@ -75,8 +76,26 @@ const res = __dirname + "/../res";
                 url: request.url!,
                 type: "html",
                 content: "",
+                user: User.load(request.headers["cookie"]),
 
             };
+
+            // If no user is set, start a new session
+            // TODO: Debugging only! Remove later – only the register action should do this.
+            if (!context.user) {
+
+                // Create a new user
+                context.user = new User("Yeet");
+
+                // Start a session
+                let id = context.user.start();
+
+                // Send a cookie
+                response.setHeader("Set-Cookie", `session=${id}`);
+
+            }
+
+            console.log("User ID:", context.user.id);
 
             // If the name is bound
             if (name in actions) {

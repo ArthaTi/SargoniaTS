@@ -1,3 +1,5 @@
+import User from "./User";
+
 export default interface Context {
 
     /**
@@ -14,6 +16,11 @@ export default interface Context {
      * Content type of the page. Defaults to "html", can be set to "json" for API output.
      */
     type: "html" | "json";
+
+    /**
+     * Current user.
+     */
+    user?: User;
 
     /**
      * Content of the page.
