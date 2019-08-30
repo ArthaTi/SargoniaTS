@@ -30,7 +30,7 @@ export default (context: Context) => {
                 wrap("nav"),
 
                 wrap("p", { id: "content", class: "value-content" },
-                    escapeHTML(context.content)
+                    escapeHTML(context.content).replace("\n", wrap("br"))
                 )
 
             )
