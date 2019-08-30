@@ -12,6 +12,7 @@ export default class User {
 
     id!: number;
     characters?: Character[];
+    currentCharacter?: Character;
 
     // Current session ID
     sessionID?: string;
