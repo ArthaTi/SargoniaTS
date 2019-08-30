@@ -18,6 +18,7 @@
   "homepage": "https://github.com/SirErico/SargoniaTS#readme",
   "devDependencies": {
     "@types/glob": "^7.1.1",
+    "@types/jquery": "^3.3.31",
     "@types/node": "^12.7.2",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",

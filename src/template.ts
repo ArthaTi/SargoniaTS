@@ -11,7 +11,18 @@ export default (context: Context) => {
 
             wrap("head",
 
+                // Stylesheets
                 wrap("link", { rel: "stylesheet", href: "/css/index.css" }),
+
+                // Scripts
+                wrap("script", {
+                    src: "http://code.jquery.com/jquery-3.4.1.min.js",
+                    integrity: "sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=",
+                    crossorigin: "anonymous"
+                }),
+                wrap("script", {
+                    src: "/js/index.js"
+                })
 
             ),
             wrap("body",

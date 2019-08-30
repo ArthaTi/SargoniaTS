@@ -37,6 +37,7 @@
         "no-empty": "off",
         "no-dupe-class-members": "off",
         "no-constant-condition": "off",
-        "no-cond-assign": "off"
+        "no-cond-assign": "off",
+        "no-undef": "off"
     }
 }
