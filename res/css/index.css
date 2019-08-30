@@ -1,0 +1,212 @@
+/* Basic styles */
+
+    /* Body */
+    body {
+
+        /* Set font family to a sans-serif */
+        font-family: sans-serif, serif;
+
+        /* Set a black background by default */
+        background: black;
+
+        /* With a white text color, obviously */
+        color: white;
+
+        /* No margin */
+        margin: 0;
+
+        /* Prevent margin collapsing */
+        padding: 0.1px;
+
+    }
+
+    a {
+
+        /* No weird blue */
+        color: inherit;
+
+        /* Remove underline */
+        text-decoration: none;
+
+    }
+
+/* Navbar */
+
+    /* Main */
+    nav {
+
+        /* Space around */
+        padding: 20px;
+
+        /* Slightly opaque dark background */
+        background: #4446;
+
+        /* Allow children to be placed relatively to navbar */
+        position: relative;
+
+    }
+
+    /* Title */
+    nav h1 {
+
+        /* No bold */
+        font-weight: normal;
+
+        /* Put in the middle */
+        text-align: center;
+
+        /* Margin on the sides for small displays */
+        margin: 0 10px;
+    }
+
+    /* Character */
+    #character {
+
+        /* Let children be sized based on the others */
+        display: table;
+
+        /* Place it on the left */
+        position: absolute;
+        left: 0;
+
+        /* In the middle */
+        top: 50%;
+        bottom: 50%;
+        transform: translateY(-50%);
+
+        /* Padding */
+        padding: 5px 10px;
+
+        /* 100px width, never more than 100% */
+        width: 100px;
+        max-width: 100%;
+    }
+
+    /* Small displays */
+    @media (max-width: 600px) {
+
+        /* Display character data on a separate line */
+        #character {
+
+            position: static;
+            transform: none;
+
+        }
+
+    }
+
+    /* Each row in the character info */
+    #character > span {
+
+        /* Display each item as a table row */
+        display: table-row;
+
+    }
+
+    /* Each item in character info */
+    #character > span > span {
+
+        /* Display as a cell */
+        display: table-cell;
+
+        /* Some space */
+        padding-top: 2px;
+
+    }
+
+    /* Character name */
+    #character .name {
+
+        /* Display slightly bigger */
+        font-size: 1.2em;
+    }
+
+    /* Character level and XP caption */
+    #character .level, #character .xp {
+
+        /* Smaller font */
+        font-size: 0.7em;
+
+        /* Display in caps */
+        font-variant: all-small-caps
+
+    }
+
+    #character .level {
+
+        float: left;
+        margin-right: 5px;
+
+    }
+
+    #character .xp {
+
+        float: right;
+        margin-left: 5px;
+
+    }
+
+/* Actions */
+
+    /* Each section */
+    #action div {
+
+        /* Add a margin above and below */
+        margin: 0 20px;
+
+    }
+
+    /* Each action */
+    #actions span, #actions a {
+
+        /* Display as a block */
+        display: block;
+
+        /* Add a small margin */
+        margin: 5px;
+    }
+
+    /* .inline actions */
+    #actions .inline {
+
+        /* Display inline */
+        display: inline-block;
+
+    }
+
+/* Misc. */
+
+    /* Progress bars */
+    .progress-bar {
+
+        /* Relative positioning */
+        position: relative;
+
+        /* A grey border at the bottom */
+        border-bottom: 4px solid #fff1;
+
+        /* Fill width, no padding on the sides */
+        width: 100%;
+        box-sizing: content-box;
+        padding-left: 0;
+        padding-right: 0;
+
+    }
+
+    /* Filled progress bar part */
+    .progress-bar > .progress-fill {
+
+        display: inline-block;
+
+        /* Place right over the border */
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+
+        /* 4 px height */
+        height: 4px;
+
+        /* Orange content */
+        background: orange;
+
+    }

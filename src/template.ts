@@ -11,6 +11,11 @@ export default (context: Context) => {
 
             wrap("head",
 
+                // Metadata
+                wrap("meta", { charset: "utf-8" }),
+                wrap("meta", { name: "viewport", content: "width=device-width, initial-scale=1" }),
+                wrap("title", context.title || "Sargonia"),
+
                 // Stylesheets
                 wrap("link", { rel: "stylesheet", href: "/css/index.css" }),
 
@@ -22,16 +27,78 @@ export default (context: Context) => {
                 }),
                 wrap("script", {
                     src: "/js/index.js"
-                })
+                }),
 
             ),
             wrap("body",
 
-                wrap("nav"),
+                wrap("nav", { class: "progress-bar" },
 
-                wrap("p", { id: "content", class: "value-content" },
+                    // Title of the page
+                    wrap("h1", { id: "title" }, context.title || "Testing"),
+
+                    // Character data
+                    wrap("a", { id: "character", href: "/characters/1" },
+
+                        // Name of the character
+                        wrap("span", { class: "name" }, "Soaku"),
+
+                        // Level progress bar
+                        // Wrapped to prevent border collapsing
+                        wrap("span",
+
+                            wrap("span", { class: "progress-bar" },
+
+                                wrap("span", { class: "progress-fill", style: "width:0%"})
+
+                            ),
+
+                        ),
+
+                        // Progress bar captions
+                        wrap("span", { class: "under-bar" },
+
+                            wrap("span", { class: "level" }, "Poziom 1"),
+                            wrap("span", { class: "xp" }, "2 XP"),
+
+                        )
+
+                    ),
+
+                    // Current progress
+                    wrap("span", { class: "progress-fill", style: "width:0%"})
+
+                ),
+
+                // Last events
+                wrap("p", { id: "content" },
                     escapeHTML(context.content).replace("\n", wrap("br"))
-                )
+                ),
+
+                // Available actions
+                wrap("div", { id: "actions" },
+
+                    // Map each context section
+                    !context.actions ? "" : context.actions.map(section =>
+
+                        // Create a <div>
+                        wrap("div", section.map(link =>
+
+                            // Add each link inside
+                            wrap(
+                                link.url ? "a" : "span",
+                                {
+                                    href: link.url || undefined,
+                                    class: link.inline ? "inline" : undefined
+                                },
+                                link.text
+                            )
+
+                        ))
+
+                    ),
+
+                ),
 
             )
 
@@ -43,11 +110,13 @@ export default (context: Context) => {
 
         error: context.error,
 
-    } : {
+    }
+        : {
 
-        title: context.title,
-        content: context.content,
+            title: context.title,
+            content: context.content,
+            actions: context.actions,
 
-    });
+        });
 
 };
