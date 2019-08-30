@@ -5,7 +5,7 @@ export default class User {
     static lastID: number = 0;
 
     id!: number;
-    characters!: Character[];
+    characters?: Character[];
 
     constructor(public name: string = "", public passwordHash: string = "") {
 
