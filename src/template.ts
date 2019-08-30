@@ -35,7 +35,7 @@ export default (context: Context) => {
                 wrap("nav", { class: "progress-bar" },
 
                     // Title of the page
-                    wrap("h1", { id: "title" }, context.title || "Testing"),
+                    wrap("h1", { id: "title" }, context.title || ""),
 
                     // Character data
                     wrap("a", { id: "character", href: "/characters/1" },
