@@ -1,4 +1,5 @@
 import User from "./User";
+import ActionLink from "./ActionLink";
 
 export default interface Context {
 
@@ -26,6 +27,11 @@ export default interface Context {
      * Content of the page.
      */
     content: string;
+
+    /**
+     * Actions the user can do.
+     */
+    actions?: ActionLink[][];
 
     /**
      * If it's a non-empty string, an error message should be displayed.
