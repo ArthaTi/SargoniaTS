@@ -95,8 +95,6 @@ const res = __dirname + "/../res";
 
             }
 
-            console.log("User ID:", context.user.id);
-
             // If the name is bound
             if (name in actions) {
 
