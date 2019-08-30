@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "target": "es5",
+        "module": "none",
+        "outFile": "res/js/index.js",
+        "rootDir": "src/client"
+    },
+    "include": [
+        "src/client"
+    ]
+}

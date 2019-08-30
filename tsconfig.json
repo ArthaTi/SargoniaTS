@@ -1,11 +1,7 @@
 {
-    "compilerOptions": {
-      "target": "ES2015",
-      "module": "commonjs",
-      "sourceMap": true,
-      "outDir": "out",
-      "rootDir": "src",
-      "strict": true,
-      "esModuleInterop": true
-    }
+  "compilerOptions": {
+    "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true
   }
+}

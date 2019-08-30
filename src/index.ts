@@ -66,9 +66,6 @@ const res = __dirname + "/../res";
         // Nope, the file doesn't exist
         catch (error) {
 
-            // Send HTML header
-            response.setHeader("Content-Type", "text/html;charset=utf-8");
-
             // Get the action name from the URL
             let name = request.url!.split("/", 2)[1];
 
@@ -76,6 +73,7 @@ const res = __dirname + "/../res";
             let context: Context = {
 
                 url: request.url!,
+                type: "html",
                 content: "",
 
             };
@@ -90,6 +88,23 @@ const res = __dirname + "/../res";
 
                 // Call the placeholder
                 actions["404"](context);
+
+            }
+
+            // If outputting as HTML
+            if (context.type === "html") {
+
+                // Send XHTML header
+                response.setHeader("Content-Type", "text/html;charset=utf-8");
+
+
+            }
+
+            // If outputting as JSON
+            else if (context.type === "json") {
+
+                // Send JSON header
+                response.setHeader("Content-Type", "application/json");
 
             }
 

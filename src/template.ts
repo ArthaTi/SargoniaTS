@@ -1,16 +1,42 @@
 import Context from "./Context";
-import { wrap } from "./utils";
+import { wrap, escapeHTML } from "./utils";
 
-export default (context: Context) => (
-    "<!DOCTYPE html>"
-    + wrap("html",
+export default (context: Context) => {
 
-        wrap("head",
+    // HTML template
+    if (context.type === "html") return (
 
-            "<link rel=\"stylesheet\" href=\"/css/index.css\" />"
+        "<!DOCTYPE html>"
+        + wrap("html",
 
-        ),
-        wrap("body", context.content)
+            wrap("head",
 
-    )
-);
+                wrap("link", { rel: "stylesheet", href: "/css/index.css" }),
+
+            ),
+            wrap("body",
+
+                wrap("nav"),
+
+                wrap("p", { id: "content", class: "value-content" },
+                    escapeHTML(context.content)
+                )
+
+            )
+
+        )
+    );
+
+    // JSON template
+    else if (context.type === "json") return JSON.stringify(context.error ? {
+
+        error: context.error,
+
+    } : {
+
+        title: context.title,
+        content: context.content,
+
+    });
+
+};

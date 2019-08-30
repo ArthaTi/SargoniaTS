@@ -7,5 +7,7 @@ export default class Character {
     constructor(public name: string = "") {
 
         this.id = ++Character.lastID;
+
     }
+
 }
