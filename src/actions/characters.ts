@@ -16,29 +16,7 @@ actions["characters"] = context => {
         else {
 
             context.title = "Utwórz postać";
-            context.text += "test\ntest";
             context.inputs = [{ name: "name", label: "Nazwa postaci" }];
-            context.actions = [
-
-                [
-                    { text: "Yeet" },
-                    { text: "Yeet", url: "/yeet" }
-                ],
-                [
-                    { text: "Yeet", inline: true },
-                    { text: "Yeet", url: "/yeet", inline: true }
-                ],
-                [
-                    [
-                        { text: "Yeet" }
-                    ],
-                    [
-                        { text: "Yeet" },
-                        { text: "Yeet", url: "/yeet" }
-                    ],
-                ]
-
-            ];
 
         }
 
