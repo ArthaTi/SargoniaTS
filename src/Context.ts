@@ -4,9 +4,9 @@ import { ActionLink, ActionInput } from "./ActionResponse";
 export default interface Context {
 
     /**
-     * URL path the user requested.
+     * URL path the user requested, split on slashes.
      */
-    url: string;
+    url: string[];
 
     /**
      * Title of the page.

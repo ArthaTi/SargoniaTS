@@ -9,12 +9,10 @@ actions["api"] = context => {
     context.type = "json";
 
     // Remove "api" from the URL
-    context.url = context.url.replace(/^\/api\/*/, "/");
+    context.url.shift();
 
     // Run the requested action
-    let name = context.url.split("/", 2)[1] || "";
-
-    console.log(context.url, name);
+    let name = context.url[0];
 
     // If the action exists
     if (name in actions) {

@@ -67,19 +67,19 @@ const res = __dirname + "/../res";
         // Nope, the file doesn't exist
         catch (error) {
 
-            // Get the action name from the URL
-            let name = request.url!.split("/", 2)[1];
-
             // Create the context
             let context: Context = {
 
-                url: request.url!,
+                url: request.url!.split("/").filter(v => v),
                 type: "html",
                 method: request.method!,
                 text: "",
                 user: User.load(request.headers["cookie"]),
 
             };
+
+            // Get the action name from the URL
+            let name = context.url[0];
 
             // If no user is set, start a new session
             // TODO: Debugging only! Remove later – only the register action should do this.
