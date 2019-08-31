@@ -42,6 +42,41 @@
 
     }
 
+    input {
+
+        /* Transparent grey background */
+        background: #4446;
+
+        /* Barely opaque white border */
+        border: 1px solid #fff2;
+
+        /* White text color */
+        color: white;
+
+        /* Inherit font size */
+        font-size: inherit;
+
+        /* Small padding */
+        padding: 5px;
+
+    }
+
+    hr {
+        /* Remove default style */
+        border: none;
+
+        /* Make a white line */
+        border-bottom: 1px solid white;
+
+        /* Normalize height */
+        height: 0;
+        box-sizing: content-box;
+
+        /* Width */
+        width: 120px;
+        max-width: 100%;
+    }
+
 /* Navbar */
 
     /* Main */
@@ -166,9 +201,6 @@
     /* Main content box */
     #content {
 
-        /* Put each content item in the center */
-        text-align: center;
-
         /* Limit width for wide devices */
         max-width: 800px;
 
@@ -189,10 +221,10 @@
     #content > * {
 
         /* Shrink to content */
-        display: inline-block;
+        display: table;
 
-        /* Prevent inheriting the rule */
-        text-align: initial;
+        /* Center */
+        margin: 10px auto;
 
     }
 
