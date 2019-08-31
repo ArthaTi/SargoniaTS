@@ -1,5 +1,5 @@
 import User from "./User";
-import ActionLink from "./ActionLink";
+import { ActionLink, ActionInput } from "./ActionResponse";
 
 export default interface Context {
 
@@ -14,6 +14,11 @@ export default interface Context {
     title?: string;
 
     /**
+     * Request method used.
+     */
+    method: "GET" | "POST" | string;
+
+    /**
      * Content type of the page. Defaults to "html", can be set to "json" for API output.
      */
     type: "html" | "json";
@@ -24,14 +29,24 @@ export default interface Context {
     user?: User;
 
     /**
-     * Content of the page.
+     * Main text of the page.
      */
-    content: string;
+    text: string;
+
+    /**
+     * Inputs the user can fill and submit.
+     *
+     * Submissions will be sent under the same URL, but with the POST method.
+     */
+    inputs?: ActionInput[];
 
     /**
      * Actions the user can do.
+     *
+     * This is a list of "sections". Each section can be either a list of links (`ActionLink[]`), or a grid of links
+     * (`ActionLink[][]`).
      */
-    actions?: ActionLink[][];
+    actions?: (ActionLink[] | ActionLink)[][];
 
     /**
      * If it's a non-empty string, an error message should be displayed.

@@ -1,7 +1,7 @@
 /**
  * Void elements in HTML. This list incomplete to improve performance, add new items if needed.
  */
-const voidElements = ["br", "hr", "link", "meta"];
+const voidElements = ["br", "hr", "link", "meta", "input"];
 
 type HtmlContent = string | string[] | void;
 type DynamicHtmlContent = HtmlContent | ((arr: string[]) => HtmlContent);

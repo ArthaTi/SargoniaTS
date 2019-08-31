@@ -2,6 +2,6 @@ import { actions } from "..";
 
 actions["404"] = context => {
 
-    context.content += "Ta strona nie istnieje.";
+    context.text += "Ta strona nie istnieje.";
 
 };

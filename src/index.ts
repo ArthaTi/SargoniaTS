@@ -75,7 +75,8 @@ const res = __dirname + "/../res";
 
                 url: request.url!,
                 type: "html",
-                content: "",
+                method: request.method!,
+                text: "",
                 user: User.load(request.headers["cookie"]),
 
             };

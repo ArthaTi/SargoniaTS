@@ -1,5 +1,13 @@
 /* Basic styles */
 
+    /* Root */
+    html, body {
+
+        /* Fit to viewport */
+        height: 100%;
+
+    }
+
     /* Body */
     body {
 
@@ -17,6 +25,10 @@
 
         /* Prevent margin collapsing */
         padding: 0.1px;
+
+        /* Flexbox for browsers which support it */
+        display: flex;
+        flex-direction: column;
 
     }
 
@@ -149,13 +161,90 @@
 
     }
 
+/* Content */
+
+    /* Main content box */
+    #content {
+
+        /* Put each content item in the center */
+        text-align: center;
+
+        /* Limit width for wide devices */
+        max-width: 800px;
+
+        /* And put self in the center too */
+        margin: 15px auto;
+
+        /* [Flex] Fill parent */
+        flex-grow: 1;
+
+        /* [Flex] Put content in center */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+    }
+
+    /* All items directly in the content */
+    #content > * {
+
+        /* Shrink to content */
+        display: inline-block;
+
+        /* Prevent inheriting the rule */
+        text-align: initial;
+
+    }
+
+    /* Text */
+    #text {
+
+        /* Slightly increased text size */
+        font-size: 1.2em;
+
+    }
+
+/* Inputs */
+
+    #inputs {
+
+        width: 100%;
+        max-width: 500px;
+
+    }
+
+    #inputs label {
+
+        margin: 1em 0;
+
+    }
+
+    #inputs label, #inputs input {
+
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+
+    }
+
 /* Actions */
 
     /* Each section */
-    #action div {
+    #actions > div {
 
-        /* Add a margin above and below */
-        margin: 0 20px;
+        /* Resize to children */
+        display: table;
+
+        /* Add a margin above and below, center within the parent */
+        margin: 1em auto;
+
+    }
+
+    /* Rows */
+    #actions .row {
+
+        /* View each row as a cell */
+        display: table-cell;
 
     }
 

@@ -1,5 +1,6 @@
 import Context from "./Context";
 import { wrap, escapeHTML } from "./utils";
+import { ActionLink } from "./ActionResponse";
 
 export default (context: Context) => {
 
@@ -49,7 +50,7 @@ export default (context: Context) => {
 
                             wrap("span", { class: "progress-bar" },
 
-                                wrap("span", { class: "progress-fill", style: "width:0%"})
+                                wrap("span", { class: "progress-fill", style: "width:0%" })
 
                             ),
 
@@ -66,39 +67,94 @@ export default (context: Context) => {
                     ),
 
                     // Current progress
-                    wrap("span", { class: "progress-fill", style: "width:0%"})
+                    wrap("span", { class: "progress-fill", style: "width:0%" })
 
                 ),
 
-                // Last events
-                wrap("p", { id: "content" },
-                    escapeHTML(context.content).replace("\n", wrap("br"))
-                ),
+                // Content
+                wrap("div", { id: "content" },
 
-                // Available actions
-                wrap("div", { id: "actions" },
+                    // Last events
+                    wrap("p", { id: "text" },
+                        escapeHTML(context.text).replace("\n", wrap("br"))
+                    ),
 
-                    // Map each context section
-                    !context.actions ? "" : context.actions.map(section =>
+                    // Available inputs
+                    wrap("div", { id: "inputs" },
 
-                        // Create a <div>
-                        wrap("div", section.map(link =>
+                        // Match each input
+                        !context.inputs ? "" : context.inputs.map(input =>
 
-                            // Add each link inside
-                            wrap(
-                                link.url ? "a" : "span",
-                                {
-                                    href: link.url || undefined,
-                                    class: link.inline ? "inline" : undefined
-                                },
-                                link.text
+                            wrap("label", input.label,
+
+                                wrap("input", {
+
+                                    name: input.name,
+                                    type: input.type || "text",
+
+                                })
+
                             )
 
-                        ))
+                        )
 
                     ),
 
-                ),
+                    // Action and input separator
+                    wrap("hr", {
+
+                        id: "inputs-actions-separator",
+
+                        // Show only if both inputs and actions are present
+                        style: [context.inputs, context.actions].every(x => x && x.length)
+                            ? undefined
+                            : "display:none",
+
+                    }),
+
+                    // Available actions
+                    wrap("div", { id: "actions" },
+
+                        // Map each context section
+                        !context.actions ? "" : context.actions.map(section =>
+
+                            // Create a <div>
+                            wrap("div", section.map(item => {
+
+                                const makeLink = (link: ActionLink) =>
+
+                                    // Add each link inside
+                                    wrap(
+                                        link.url ? "a" : "span",
+                                        {
+                                            href: link.url || undefined,
+                                            class: link.inline ? "inline" : undefined
+                                        },
+                                        link.text
+                                    );
+
+                                // Item is an array
+                                if (item instanceof Array) {
+
+                                    // Map each link and wrap in a div
+                                    return wrap("div", { class: "row" },
+                                        item.map(makeLink)
+                                    );
+
+                                } else {
+
+                                    // Return the link plain
+                                    return makeLink(item);
+
+                                }
+
+                            }))
+
+                        ),
+
+                    ),
+
+                )
 
             )
 
@@ -114,7 +170,7 @@ export default (context: Context) => {
         : {
 
             title: context.title,
-            content: context.content,
+            content: context.text,
             actions: context.actions,
 
         });
