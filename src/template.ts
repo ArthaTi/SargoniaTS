@@ -80,7 +80,7 @@ export default (context: Context) => {
                     ),
 
                     // Available inputs
-                    wrap("div", { id: "inputs" },
+                    wrap("form", { id: "inputs", method: "POST" },
 
                         // Match each input
                         !context.inputs ? "" : context.inputs.map(input =>
@@ -97,6 +97,9 @@ export default (context: Context) => {
                             )
 
                         )
+
+                        // Add a submit button
+                        + wrap("input", { type: "submit", value: "OK" })
 
                     ),
 
