@@ -1,17 +1,11 @@
 import User from "./User";
-import { ActionLink, ActionInput } from "./ActionResponse";
 
-export default interface Context {
+export default interface Context extends Common.Api {
 
     /**
      * URL path the user requested, split on slashes.
      */
     url: string[];
-
-    /**
-     * Title of the page.
-     */
-    title?: string;
 
     /**
      * Request method used.
@@ -27,30 +21,5 @@ export default interface Context {
      * Current user.
      */
     user?: User;
-
-    /**
-     * Main text of the page.
-     */
-    text: string;
-
-    /**
-     * Inputs the user can fill and submit.
-     *
-     * Submissions will be sent under the same URL, but with the POST method.
-     */
-    inputs?: ActionInput[];
-
-    /**
-     * Actions the user can do.
-     *
-     * This is a list of "sections". Each section can be either a list of links (`ActionLink[]`), or a grid of links
-     * (`ActionLink[][]`).
-     */
-    actions?: (ActionLink[] | ActionLink)[][];
-
-    /**
-     * If it's a non-empty string, an error message should be displayed.
-     */
-    error?: string;
 
 }

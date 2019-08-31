@@ -1,6 +1,5 @@
 import Context from "./Context";
 import { wrap, escapeHTML } from "./utils";
-import { ActionLink } from "./ActionResponse";
 
 export default (context: Context) => {
 
@@ -124,7 +123,7 @@ export default (context: Context) => {
                             // Create a <div>
                             wrap("div", section.map(item => {
 
-                                const makeLink = (link: ActionLink) =>
+                                const makeLink = (link: Common.ActionLink) =>
 
                                     // Add each link inside
                                     wrap(
@@ -162,6 +161,7 @@ export default (context: Context) => {
             )
 
         )
+
     );
 
     // JSON template
@@ -170,11 +170,12 @@ export default (context: Context) => {
         error: context.error,
 
     }
-        : {
+        : <Common.Api>{
 
             title: context.title,
-            content: context.text,
+            text: context.text,
             actions: context.actions,
+            inputs: context.inputs,
 
         });
 

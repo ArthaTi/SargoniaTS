@@ -5,8 +5,10 @@
         "module": "commonjs",
         "outDir": "out",
         "rootDir": "src",
+        "declaration": true
     },
     "exclude": [
-        "src/client"
+        "src/client",
+        "out/"
     ]
 }
