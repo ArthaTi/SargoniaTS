@@ -1,7 +1,7 @@
 {
   "name": "sargonia-ts",
   "version": "1.0.0",
-  "description": "Takie tam",
+  "description": "HTTP server for Sargonia",
   "main": "out/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,10 +20,14 @@
     "@types/glob": "^7.1.1",
     "@types/jquery": "^3.3.31",
     "@types/node": "^12.7.2",
+    "typescript": "^3.5.3"
+  },
+  "optionalDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
-    "eslint": "^6.2.1",
-    "glob": "^7.1.4",
-    "typescript": "^3.5.3"
+    "eslint": "^6.2.1"
+  },
+  "dependencies": {
+    "glob": "^7.1.4"
   }
 }
