@@ -44,6 +44,9 @@
         /* Allow children to be placed relatively to navbar */
         position: relative;
 
+        /* Add some space for the character data if there is no title */
+        min-height: 30px;
+
     }
 
     /* Title */
@@ -187,7 +190,6 @@
 
         /* Fill width, no padding on the sides */
         width: 100%;
-        box-sizing: content-box;
         padding-left: 0;
         padding-right: 0;
 
