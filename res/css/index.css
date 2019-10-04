@@ -121,14 +121,13 @@
 
         /* In the middle */
         top: 50%;
-        bottom: 50%;
         transform: translateY(-50%);
 
         /* Padding */
         padding: 5px 10px;
 
         /* 100px width, never more than 100% */
-        width: 100px;
+        min-width: 100px;
         max-width: 100%;
     }
 
@@ -172,7 +171,7 @@
     }
 
     /* Character level and XP caption */
-    #character .level, #character .xp {
+    #character .level, #character .xp-left {
 
         /* Smaller font */
         font-size: 0.7em;
@@ -189,7 +188,7 @@
 
     }
 
-    #character .xp {
+    #character .xp-left {
 
         float: right;
         margin-left: 5px;
@@ -233,6 +232,20 @@
 
         /* Slightly increased text size */
         font-size: 1.2em;
+
+    }
+
+    /* Error */
+    #error {
+
+
+        padding: 1em 2em;
+
+        /* Half-transparent black background */
+        background: #0004;
+
+        /* A little red line at the bottom */
+        border-bottom: 4px solid #f34;
 
     }
 

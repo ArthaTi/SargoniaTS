@@ -5,10 +5,11 @@
         "module": "commonjs",
         "outDir": "out",
         "rootDir": "src",
-        "declaration": true
+        "declaration": true,
+        "declarationDir": "out",
     },
     "exclude": [
         "src/client",
-        "out/"
+        "out",
     ]
 }

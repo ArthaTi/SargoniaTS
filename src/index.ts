@@ -4,6 +4,8 @@ import glob from "glob";
 import Context from "./Context";
 import template from "./template";
 import User from "./User";
+import * as qs from "querystring";
+import { RequestError, Redirect, InternalRedirect } from "./exceptions";
 
 type Listener = (context: Context) => void;
 
@@ -23,6 +25,62 @@ export let mimeTypes: { [extension: string]: string } = {
     "js": "text/javascript; charset=utf-8",
     "json": "application/json",
 };
+
+/**
+ * Run an action.
+ *
+ * @param action Name of the action to run.
+ * @param context The Context object for the action.
+ */
+export default function run(action: string, context: Context) {
+
+    try {
+
+        // If the name is bound
+        if (action in actions) {
+
+            // Call the bound function
+            actions[action](context);
+
+        } else {
+
+            // Call the placeholder
+            actions["404"](context);
+
+        }
+
+    } catch (e) {
+
+        // A request error was thrown
+        if (e instanceof RequestError) {
+
+            // An internal redirect for the API
+            if (e instanceof InternalRedirect && context.type === "json") {
+
+                // Add a redirect to the context
+                context.redirect = e.target;
+
+                // Request the action
+                run(e.action, e.context);
+
+                // Stop – don't rethrow
+                return;
+
+            } else {
+
+                // Add message to context
+                context.error = e.message;
+
+            }
+
+        }
+
+        // Rethrow the error
+        throw e;
+
+    }
+
+}
 
 // Create the server
 let server = new Server();
@@ -73,10 +131,43 @@ const res = __dirname + "/../res";
                 url: request.url!.split("/").filter(v => v),
                 type: "html",
                 method: request.method!,
+                data: {},
                 text: "",
                 user: User.load(request.headers["cookie"]),
 
             };
+
+            // Wait for data
+            let data = await new Promise<string>(resolve => {
+
+                let data = "";
+
+                // Load the data
+                request.on("data", chunk => {
+
+                    // Add up the data
+                    data += chunk;
+
+                    // Limit the size to 5 KB
+                    if (data.length > 5000) {
+
+                        // Send status code
+                        response.statusCode = 413;
+
+                        // Stop the transmission
+                        response.end();
+
+                    }
+
+                });
+
+                // Wait for the request to end
+                request.on("end", () => resolve(data));
+
+            });
+
+            // Assign the data to context
+            context.data = qs.parse(data);
 
             // Get the action name from the URL
             let name = context.url[0];
@@ -92,20 +183,55 @@ const res = __dirname + "/../res";
                 let id = context.user.start();
 
                 // Send a cookie
-                response.setHeader("Set-Cookie", `session=${id}`);
+                response.setHeader("Set-Cookie", `session=${id}; path=/`);
 
             }
 
-            // If the name is bound
-            if (name in actions) {
+            try {
 
-                // Call the bound function
-                actions[name](context);
+                // Run the action
+                run(name, context);
 
-            } else {
+            } catch (e) {
 
-                // Call the placeholder
-                actions["404"](context);
+                // It's a request error
+                if (e instanceof RequestError) {
+
+                    // Send the given status code
+                    // eslint-disable-next-line
+                    response.statusCode = e.code;
+
+                    // It's a redirect
+                    if (e instanceof Redirect) {
+
+                        // Set the given header
+                        response.setHeader("Location", e.target);
+
+                    }
+
+                }
+
+                // Rethrow other errors
+                else throw e;
+
+            }
+
+            // A character is set
+            if (context.user && context.user.currentCharacter) {
+
+                let character = context.user.currentCharacter;
+
+                // Set the character
+                context.character = {
+
+                    id: character.id,
+                    name: character.name,
+                    level: character.level,
+                    levelProgress: (character.xp - character.requiredXP(character.level - 1)) * 100
+                        / character.requiredXP(),
+                    xpLeft: character.requiredXP() - character.xp,
+
+                };
 
             }
 

@@ -1,37 +1,38 @@
-/// <reference path="../../out/common/Api.d.ts" />
+/// <reference path="../../out/Common/Api.d.ts" />
 
 $(() => {
 
     // Listen to link clicks
     $(document).on("click", "a[href]", event => {
 
-        // Get the link
-        let url = $(event.target).attr("href")!;
-
-        // If this is an external link
-        if (/^\w+:/.test(url)) {
-
-            // Ignore it
-            return;
-
-        }
-
-        // Don't open the link otherwise
-        event.preventDefault();
-
-        // Check if the URL is absolute
-        let absolute = /^\//.test(url);
-
-        // If it's a relative link
-        if (!absolute) {
-
-            // Add the window URL to it
-            url = location.pathname + url;
-
-        }
+        let url = getLink(event);
+        if (!url) return;
 
         // Open the URL via API
         apiRequest(url);
+
+        // Push state
+        history.pushState({}, "Sargonia", url);
+
+    });
+
+    $(document).on("click", "form button, form input[type=\"submit\"]", event => {
+
+        let $target = $(event.target);
+        let $form = $target.closest("form");
+        let url = getLink(event, $form);
+        if (!url) return;
+
+        // Send request
+        apiRequest(url, {
+
+            // A POST request
+            method: "post",
+
+            // With the data in the form
+            data: $form.serialize(),
+
+        });
 
         // Push state
         history.pushState({}, "Sargonia", url);
@@ -47,140 +48,177 @@ $(() => {
 
 });
 
-function apiRequest(url: string) {
+function apiRequest(url: string, options: JQueryAjaxSettings = {}) {
 
-    $.get("/api" + url, displayData);
+    $.ajax("/api" + url, {
+
+        success: displayData,
+        ...options
+
+    });
 
 }
 
 function displayData(data: Common.Api) {
 
-    // Set title
-    $("#title").text(data.title || "");
+    // Update the current history state
+    history.replaceState(
+        {}, "Sargonia" + (data.title ? ` – ${data.title}` : ""),
+        data.redirect || location.href
+    );
 
-    // Update document.title
-    document.title = data.title || "";
+    // Set title
+    {
+
+        $("#title").text(data.title || "");
+
+        // Update document.title
+        document.title = data.title || "";
+
+    }
 
     // Set text
-    let $text = $("#text").text(data.text || "");
+    {
 
-    // Add linebreaks to it
-    $text.html($text.html().replace("\n", "<br />"));
+        let $text = $("#text").text(data.text || "");
+        $("#text").toggle(!!data.text);
 
-    let $inputs = $("#inputs").empty();
-
-    // Add each of new inputs
-    for (let input of data.inputs || []) {
-
-        // Create the label
-        $("<label />")
-
-            //  Set text
-            .text(input.label || "")
-
-            // Append field
-            .append(
-
-                $("<input />")
-
-                    // Set attributes
-                    .attr("name", input.name)
-                    .attr("type", input.type || "text")
-
-            )
-
-            // Add to field list
-            .appendTo($inputs);
+        // Add linebreaks to it
+        $text.html($text.html().replace("\n", "<br />"));
 
     }
 
-    // Add submit button
-    if (data.inputs && data.inputs.length) {
+    // Set error text
+    {
 
-        $("<input>")
-            .attr("type", "submit")
-            .attr("value", "OK")
-            .appendTo($inputs);
+        let $error = $("#error").text(data.error || "");
+        $("#error").toggle(!!data.error);
+
+        // Add linebreaks to it
+        $error.html($error.html().replace("\n", "<br />"));
 
     }
 
-    // Clear actions
-    let $actions = $("#actions").empty();
+    // Clear inputs
+    {
 
-    // Add actions – each section
-    for (let section of data.actions || []) {
+        let $inputs = $("#inputs").empty();
+        $("#inputs").toggle(!!data.inputs && !!data.inputs.length);
 
-        // Add a div to the action list
-        let $div = $("<div />").appendTo($actions);
+        // Add each of new inputs
+        for (let input of data.inputs || []) {
 
-        // Iterate on the section
-        for (let item of section) {
+            // Create the label
+            $("<label />")
 
-            // Item is an array
-            if (item instanceof Array) {
+                //  Set text
+                .text(input.label || "")
 
-                // Create the row div
-                let $row = $("<div />")
-                    .addClass("row")
-                    .appendTo($div);
+                // Append field
+                .append(
 
-                // Map each link and wrap in a div
-                for (let link of item) {
+                    $("<input />")
 
-                    makeLink($row, link);
+                        // Set attributes
+                        .attr("name", input.name)
+                        .attr("type", input.type || "text")
 
-                }
+                )
 
-            } else {
+                // Add to field list
+                .appendTo($inputs);
 
-                // Return the link plain
-                makeLink($div, item);
+        }
 
-            }
+        // Add submit button
+        if (data.inputs && data.inputs.length) {
+
+            $("<input>")
+                .attr("type", "submit")
+                .attr("value", "OK")
+                .appendTo($inputs);
 
         }
 
     }
 
-    // Make the separator visible if both the form and actions are visible
-    $("#inputs-actions-separator").toggle(
-        data.inputs && data.inputs.length &&
-        data.actions && data.actions.length
-    );
+    // Clear actions
+    {
 
-}
+        let $actions = $("#actions").empty();
 
-function makeLink(parent: JQuery, link: Common.ActionLink) {
+        // Add actions – each section
+        for (let section of data.actions || []) {
 
-    let $item;
+            // Add a div to the action list
+            let $div = $("<div />").appendTo($actions);
 
-    // Given a link
-    if (link.url) {
+            // Iterate on the section
+            for (let item of section) {
 
-        // Create the link
-        $item = $("<a>").attr("href", link.url);
+                // Item is an array
+                if (item instanceof Array) {
 
-    } else {
+                    // Create the row div
+                    let $row = $("<div />")
+                        .addClass("row")
+                        .appendTo($div);
 
-        // Create as a normal span otherwise
-        $item = $("<span>");
+                    // Map each link and wrap in a div
+                    for (let link of item) {
+
+                        makeLink($row, link);
+
+                    }
+
+                } else {
+
+                    // Return the link plain
+                    makeLink($div, item);
+
+                }
+
+            }
+
+        }
+
+        // Make the separator visible if both the form and actions are visible
+        $("#inputs-actions-separator").toggle(!!(
+            data.inputs && data.inputs.length &&
+            data.actions && data.actions.length
+        ));
 
     }
 
-    // If it's inline
-    if (link.inline) {
+    {
 
-        // Add the .inline class
-        $item.addClass("inline");
+        let $character = $("#character");
+
+        // A character was sent
+        if (data.character) {
+
+            // Display if a character is set
+            $character.show();
+
+            // Set link
+            $character.attr("href", `/character/${data.character.id}`);
+
+            // Set data
+            $character.find(".name").text(data.character.name);
+            $character.find(".progress-fill").css("width", data.character.levelProgress + "%");
+            $character.find(".level").text(`Poziom ${data.character.level}`);
+            $character.find(".xp-left").text(`${data.character.xpLeft} XP`);
+
+        }
+
+        // Character was unset
+        else if (data.character === null) {
+
+            // Hide it
+            $character.hide();
+
+        }
 
     }
-
-    return $item
-
-        // Add text
-        .text(link.text)
-
-        // Append to parent
-        .appendTo(parent);
 
 }

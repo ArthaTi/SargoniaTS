@@ -3,6 +3,13 @@ import { wrap, escapeHTML } from "./utils";
 
 export default (context: Context) => {
 
+    /**
+     * If the given value is false, return the "display:none;" CSS rule.
+     */
+    const show = (what: any) => what ? undefined : "display:none;";
+
+    console.log(context.character);
+
     // HTML template
     // TODO: Refactor to multiple functions with server-side jQuery – this way there will only be one code for both
     // the client and server necessary. The code is already similar enough it should be easy to do.
@@ -40,18 +47,36 @@ export default (context: Context) => {
                     wrap("h1", { id: "title" }, context.title || ""),
 
                     // Character data
-                    wrap("a", { id: "character", href: "/characters/1" },
+                    wrap("a",
+
+                        // A character is selected, link to it
+                        context.character ? {
+                            id: "character",
+                            href: `/character/${context.character.id}`,
+                        } :
+
+                            // No character selected, link to character selection menu
+                            {
+                                id: "character",
+                                href: "/character/select",
+                                style: "display:none;"
+                            },
 
                         // Name of the character
-                        wrap("span", { class: "name" }, "Soaku"),
+                        wrap("span", { class: "name" },
+                            context.character ? context.character.name : "Brak postaci"
+                        ),
 
                         // Level progress bar
                         // Wrapped to prevent border collapsing
-                        wrap("span",
+                        wrap("span", { class: "progress-bar-wrapper" },
 
                             wrap("span", { class: "progress-bar" },
 
-                                wrap("span", { class: "progress-fill", style: "width:0%" })
+                                wrap("span", {
+                                    class: "progress-fill",
+                                    style: `width:${context.character ? context.character.levelProgress : 0}%`
+                                })
 
                             ),
 
@@ -60,8 +85,12 @@ export default (context: Context) => {
                         // Progress bar captions
                         wrap("span", { class: "under-bar" },
 
-                            wrap("span", { class: "level" }, "Poziom 1"),
-                            wrap("span", { class: "xp" }, "2 XP"),
+                            wrap("span", { class: "level" },
+                                context.character ? `Poziom ${context.character.level}` : ""
+                            ),
+                            wrap("span", { class: "xp-left", title: "XP do następnego poziomu" },
+                                context.character ? `${context.character.xpLeft} XP` : ""
+                            ),
 
                         )
 
@@ -76,12 +105,35 @@ export default (context: Context) => {
                 wrap("div", { id: "content" },
 
                     // Last events
-                    wrap("p", { id: "text" },
+                    wrap("p",
+
+                        {
+                            id: "text",
+                            style: show(context.text)
+                        },
+
                         escapeHTML(context.text).replace("\n", wrap("br"))
+
+                    ),
+
+                    wrap("p",
+
+                        {
+                            id: "error",
+                            style: show(context.error)
+                        },
+
+                        escapeHTML(context.error || "").replace("\n", wrap("br"))
                     ),
 
                     // Available inputs
-                    wrap("form", { id: "inputs", method: "POST" },
+                    wrap("form",
+
+                        {
+                            id: "inputs",
+                            method: "POST",
+                            style: show(context.inputs && context.inputs.length)
+                        },
 
                         // Match each input
                         !context.inputs ? "" : context.inputs.map(input =>
@@ -99,8 +151,8 @@ export default (context: Context) => {
 
                         )
 
-                        // Add a submit button
-                        + wrap("input", { type: "submit", value: "OK" })
+                            // Add a submit button
+                            + wrap("input", { type: "submit", value: "OK" })
 
                     ),
 
@@ -167,18 +219,16 @@ export default (context: Context) => {
     );
 
     // JSON template
-    else if (context.type === "json") return JSON.stringify(context.error ? {
+    else if (context.type === "json") return JSON.stringify({
 
+        redirect: context.redirect,
+        title: context.title,
+        text: context.text,
         error: context.error,
+        actions: context.actions,
+        inputs: context.inputs,
+        character: context.character,
 
-    }
-        : <Common.Api>{
-
-            title: context.title,
-            text: context.text,
-            actions: context.actions,
-            inputs: context.inputs,
-
-        });
+    });
 
 };

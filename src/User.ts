@@ -1,5 +1,6 @@
 import Character from "./Character";
 import * as crypto from "crypto";
+import { RequestError } from "./exceptions";
 
 export default class User {
 
@@ -43,6 +44,7 @@ export default class User {
                 if (pair.length != 2) {
 
                     // That's a bad request, throw a Bad Request error in the future
+                    throw new RequestError(400, "Bad Request");
 
                 }
 

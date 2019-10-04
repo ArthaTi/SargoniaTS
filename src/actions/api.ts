@@ -1,4 +1,4 @@
-import { actions } from "..";
+import run, { actions } from "..";
 
 /**
  * Display the API
@@ -15,16 +15,6 @@ actions["api"] = context => {
     let name = context.url[0];
 
     // If the action exists
-    if (name in actions) {
-
-        // Run it
-        actions[name](context);
-
-    } else {
-
-        // Run the placeholder
-        actions["404"](context);
-
-    }
+    run(name, context);
 
 };

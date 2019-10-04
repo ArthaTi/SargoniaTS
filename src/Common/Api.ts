@@ -5,6 +5,14 @@ namespace Common {
     export interface Api {
 
         /**
+         * If present, the URL should be changed to this one. Consider this a redirect resolved by the server: you
+         * don't have to make any additional requests, as it includes the data for the given action too.
+         *
+         * Note: `/api` prefix won't be included in the redirect content.
+         */
+        redirect?: string;
+
+        /**
          * Title of the page.
          */
         title?: string;
@@ -33,6 +41,19 @@ namespace Common {
          * If it's a non-empty string, an error message should be displayed.
          */
         error?: string;
+
+        /**
+         * Character data to be shown in upper-left corner
+         */
+        character?: {
+
+            id: number;
+            name: string;
+            level: number;
+            levelProgress: number;
+            xpLeft: number;
+
+        };
 
     }
 

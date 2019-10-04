@@ -1,4 +1,5 @@
 import User from "./User";
+import { ParsedUrlQuery } from "querystring";
 
 export default interface Context extends Common.Api {
 
@@ -16,6 +17,11 @@ export default interface Context extends Common.Api {
      * Content type of the page. Defaults to "html", can be set to "json" for API output.
      */
     type: "html" | "json";
+
+    /**
+     * Data the user sent.
+     */
+    data: ParsedUrlQuery;
 
     /**
      * Current user.
