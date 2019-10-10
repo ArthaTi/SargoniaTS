@@ -1,9 +1,9 @@
-import run, { actions } from "..";
+import { actions } from "..";
 import Character from "../Character";
 import { requireLogin } from "../checks";
 import { InternalRedirect } from "../exceptions";
 
-actions["character"] = context => {
+actions["character"] = async context => {
 
     // Require login
     requireLogin(context);
@@ -47,6 +47,9 @@ actions["character"] = context => {
 
                 // Create the character
                 context.user!.currentCharacter = new Character(name);
+
+                // Save it to the database
+                await context.user!.currentCharacter.save();
 
                 // Make a request
                 context.url = ["character", context.user!.currentCharacter.id.toString()];
@@ -113,7 +116,17 @@ actions["character"] = context => {
         }
 
         // Get the character
-        context.text += "";
+        let character = await Character.load(id);
+
+        // Character doesn't exist
+        if (!character) {
+
+            context.error = "Postać nie istnieje.";
+            return;
+
+        }
+
+        context.text += character.name;
 
     }
 

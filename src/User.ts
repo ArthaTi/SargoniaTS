@@ -1,7 +1,9 @@
 import Character from "./Character";
 import * as crypto from "crypto";
 import { RequestError } from "./exceptions";
+import { Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
 
+@Entity()
 export default class User {
 
     static lastID: number = 0;
@@ -11,18 +13,20 @@ export default class User {
      */
     static sessions: { [key: string]: User } = {};
 
+    /**
+     * ID of the player
+     */
+    @PrimaryGeneratedColumn()
     id!: number;
+
+    @ManyToOne(_type => Character)
     characters?: Character[];
     currentCharacter?: Character;
 
     // Current session ID
     sessionID?: string;
 
-    constructor(public name: string = "", public passwordHash: string = "") {
-
-        this.id = ++User.lastID;
-
-    }
+    constructor(public name: string = "", public passwordHash: string = "") { }
 
     /**
      * Load existing session

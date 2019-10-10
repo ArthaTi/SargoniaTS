@@ -6,8 +6,16 @@ import template from "./template";
 import User from "./User";
 import * as qs from "querystring";
 import { RequestError, Redirect, InternalRedirect } from "./exceptions";
+import { createConnection, Connection } from "typeorm";
+import Character from "./Character";
+import "reflect-metadata";
 
-type Listener = (context: Context) => void;
+type Listener = (context: Context) => void | Promise<any>;
+
+/**
+ * Database connection
+ */
+export let connection: Connection;
 
 /**
  * Mapping of strings to functions responding to certain requests.
@@ -32,20 +40,30 @@ export let mimeTypes: { [extension: string]: string } = {
  * @param action Name of the action to run.
  * @param context The Context object for the action.
  */
-export default function run(action: string, context: Context) {
+export default async function run(action: string, context: Context) {
 
     try {
+
+        let result;
 
         // If the name is bound
         if (action in actions) {
 
             // Call the bound function
-            actions[action](context);
+            result = actions[action](context);
 
         } else {
 
             // Call the placeholder
-            actions["404"](context);
+            result = actions["404"](context);
+
+        }
+
+        // If it's a promise
+        if (result instanceof Promise) {
+
+            // Wait for the result
+            await result;
 
         }
 
@@ -61,7 +79,7 @@ export default function run(action: string, context: Context) {
                 context.redirect = e.target;
 
                 // Request the action
-                run(e.action, e.context);
+                await run(e.action, e.context);
 
                 // Stop – don't rethrow
                 return;
@@ -190,7 +208,7 @@ const res = __dirname + "/../res";
             try {
 
                 // Run the action
-                run(name, context);
+                await run(name, context);
 
             } catch (e) {
 
@@ -286,6 +304,19 @@ glob(__dirname + "/actions/*.js", async (_error, matches) => {
         await import(match);
 
     }
+
+    // Connect to database
+    connection = await createConnection({
+
+        type: "mysql",
+        host: "localhost",
+        username: "sargonia",
+        password: "db8175",
+        database: "sargonia",
+        entities: [User, Character],
+        synchronize: true
+
+    });
 
     // Start listening
     server.listen(port, host);

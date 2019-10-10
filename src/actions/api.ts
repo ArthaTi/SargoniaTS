@@ -3,7 +3,7 @@ import run, { actions } from "..";
 /**
  * Display the API
  */
-actions["api"] = context => {
+actions["api"] = async context => {
 
     // Output as JSON
     context.type = "json";
@@ -15,6 +15,6 @@ actions["api"] = context => {
     let name = context.url[0];
 
     // If the action exists
-    run(name, context);
+    await run(name, context);
 
 };

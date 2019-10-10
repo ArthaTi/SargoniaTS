@@ -1,34 +1,48 @@
 import Fight from "./Fight";
+import BaseEntity from "./BaseEntity";
+import { Entity, Column } from "typeorm";
 
-export default class Character {
-
-    static lastID: number = 0;
-
-    /**
-     * ID of the character.
-     */
-    id!: number;
+@Entity()
+export default class Character extends BaseEntity {
 
     /**
-     * Current events
+     * Name of the character
      */
-    event?: Event;
-    fight?: Fight;
-
-    /**
-     * The last time the character was in use.
-     */
-    lastUse: number = Date.now();
+    @Column()
+    name: string;
 
     /**
      * Level of the character
      */
+    @Column()
     level: number = 1;
 
     /**
      * XP of the character
      */
+    @Column()
     xp: number = 0;
+
+    /**
+     * The last time the character was in use.
+     */
+    @Column("bigint")
+    lastUse: number = Date.now();
+
+    /**
+     * Current events
+     */
+    event?: Event;
+
+    /**
+     * Current fight data
+     */
+    fight?: Fight;
+
+    constructor(name?: string) {
+        super();
+        this.name = name!;
+    }
 
     /**
      * XP required to reach the next level
@@ -40,10 +54,6 @@ export default class Character {
 
     }
 
-    constructor(public name: string = "") {
-
-        this.id = ++Character.lastID;
-
-    }
-
 }
+
+console.log(Reflect.getMetadata("design:type", Character, "lastUse"));
