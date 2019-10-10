@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn } from "typeorm";
+import { PrimaryGeneratedColumn, FindOneOptions } from "typeorm";
 import { connection } from ".";
 
 export default abstract class BaseEntity {
@@ -37,7 +37,6 @@ export default abstract class BaseEntity {
         self.initializeList();
 
         // Get the repo
-        console.log(this.constructor);
         let repo = connection.getRepository(this.constructor.name);
 
         // Save to repo
@@ -51,8 +50,9 @@ export default abstract class BaseEntity {
     /**
      * Load an existing entity
      */
-    static async load<T extends BaseEntity>(this: { new(): T } & typeof BaseEntity, id: number)
-        : Promise<T | undefined> {
+    static async load<T extends BaseEntity>(
+        this: { new(): T } & typeof BaseEntity, id: number, options?: FindOneOptions<T>
+    ): Promise<T | undefined> {
 
         // Initialize the list
         this.initializeList();
@@ -72,7 +72,7 @@ export default abstract class BaseEntity {
         let repo = connection.getRepository<T>(this.name);
 
         // Search in the repo
-        let item = await repo.findOne(id);
+        let item = await repo.findOne(id, options);
 
         // If entity exists
         if (item) {

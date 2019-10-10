@@ -21,7 +21,7 @@ export default (context: Context) => {
                 // Metadata
                 wrap("meta", { charset: "utf-8" }),
                 wrap("meta", { name: "viewport", content: "width=device-width, initial-scale=1" }),
-                wrap("title", context.title || "Sargonia"),
+                wrap("title", context.title ? `Sargonia – ${context.title}` : "Sargonia"),
 
                 // Stylesheets
                 wrap("link", { rel: "stylesheet", href: "/css/index.css" }),

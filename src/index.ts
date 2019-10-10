@@ -9,6 +9,7 @@ import { RequestError, Redirect, InternalRedirect } from "./exceptions";
 import { createConnection, Connection } from "typeorm";
 import Character from "./Character";
 import "reflect-metadata";
+import Session from "./Session";
 
 type Listener = (context: Context) => void | Promise<any>;
 
@@ -151,7 +152,7 @@ const res = __dirname + "/../res";
                 method: request.method!,
                 data: {},
                 text: "",
-                user: User.load(request.headers["cookie"]),
+                user: await Session.restore(request.headers["cookie"]),
 
             };
 
@@ -197,8 +198,15 @@ const res = __dirname + "/../res";
                 // Create a new user
                 context.user = new User("Yeet");
 
+                console.log("starting session");
+
+                // Create a new session
+                let session = new Session(context.user);
+
                 // Start a session
-                let id = context.user.start();
+                let id = await session.start();
+
+                console.log("session started");
 
                 // Send a cookie
                 response.setHeader("Set-Cookie", `session=${id}; path=/`);
@@ -313,7 +321,7 @@ glob(__dirname + "/actions/*.js", async (_error, matches) => {
         username: "sargonia",
         password: "db8175",
         database: "sargonia",
-        entities: [User, Character],
+        entities: [User, Character, Session],
         synchronize: true
 
     });

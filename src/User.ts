@@ -1,17 +1,11 @@
 import Character from "./Character";
-import * as crypto from "crypto";
 import { RequestError } from "./exceptions";
-import { Entity, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, OneToMany } from "typeorm";
+import BaseEntity from "./BaseEntity";
+import Session from "./Session";
 
 @Entity()
-export default class User {
-
-    static lastID: number = 0;
-
-    /**
-     * Active sessions
-     */
-    static sessions: { [key: string]: User } = {};
+export default class User extends BaseEntity {
 
     /**
      * ID of the player
@@ -19,64 +13,36 @@ export default class User {
     @PrimaryGeneratedColumn()
     id!: number;
 
-    @ManyToOne(_type => Character)
-    characters?: Character[];
+    @Column()
+    name: string;
+
+    @Column()
+    passwordHash: string;
+
+    /**
+     * Characters owned by the character.
+     */
+    @OneToMany(() => Character, character => character.owner)
+    characters!: Character[];
+
+    /**
+     * Sessions for the user
+     */
+    @OneToMany(() => Session, session => session.user)
+    sessions!: Session[];
+
+    /**
+     * Currently active character.
+     */
     currentCharacter?: Character;
 
     // Current session ID
     sessionID?: string;
 
-    constructor(public name: string = "", public passwordHash: string = "") { }
-
-    /**
-     * Load existing session
-     */
-    static load(cookies?: string): User | undefined {
-
-        // Parse the cookies
-        if (cookies) {
-
-            let pairs = cookies.split(";");
-
-            // Search for the "session" pair
-            for (let plainPair of pairs) {
-
-                // Split in two
-                let pair = plainPair.split("=");
-
-                // Each pair must have exactly two items
-                if (pair.length != 2) {
-
-                    // That's a bad request, throw a Bad Request error in the future
-                    throw new RequestError(400, "Bad Request");
-
-                }
-
-                // Look for the "session" cookie
-                if (pair[0].trim() !== "session") continue;
-
-                // Get the session
-                return this.sessions[pair[1].trim()];
-
-            }
-
-        }
-
-    }
-
-    /**
-     * Start a session
-     */
-    start(): string {
-
-        // Create a random session ID
-        this.sessionID = this.id + "-" + crypto.randomBytes(16).toString("hex");
-
-        // Start the session
-        User.sessions[this.sessionID] = this;
-
-        return this.sessionID;
-
+    constructor(name: string = "", passwordHash: string = "") {
+        super();
+        this.name = name;
+        this.passwordHash = passwordHash;
     }
 
 }

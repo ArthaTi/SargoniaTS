@@ -1,14 +1,21 @@
 import Fight from "./Fight";
 import BaseEntity from "./BaseEntity";
-import { Entity, Column } from "typeorm";
+import { Entity, Column, ManyToOne } from "typeorm";
+import User from "./User";
 
 @Entity()
 export default class Character extends BaseEntity {
 
     /**
+     * Owner of this character.
+     */
+    @ManyToOne(() => User, user => user.characters)
+    owner!: User;
+
+    /**
      * Name of the character
      */
-    @Column()
+    @Column({ unique: true })
     name: string;
 
     /**
@@ -39,8 +46,9 @@ export default class Character extends BaseEntity {
      */
     fight?: Fight;
 
-    constructor(name?: string) {
+    constructor(owner?: User, name?: string) {
         super();
+        this.owner = owner!;
         this.name = name!;
     }
 
@@ -55,5 +63,3 @@ export default class Character extends BaseEntity {
     }
 
 }
-
-console.log(Reflect.getMetadata("design:type", Character, "lastUse"));

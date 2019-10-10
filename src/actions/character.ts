@@ -46,7 +46,7 @@ actions["character"] = async context => {
             else {
 
                 // Create the character
-                context.user!.currentCharacter = new Character(name);
+                context.user!.currentCharacter = new Character(context.user!, name);
 
                 // Save it to the database
                 await context.user!.currentCharacter.save();
@@ -126,7 +126,8 @@ actions["character"] = async context => {
 
         }
 
-        context.text += character.name;
+        context.title = character.name;
+        context.text += `Poziom ${character.level} – XP ${character.xp}/${character.requiredXP()}\n`;
 
     }
 
