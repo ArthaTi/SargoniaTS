@@ -170,7 +170,7 @@ const res = __dirname + "/../res";
             context.data = qs.parse(data);
 
             // Get the action name from the URL
-            let name = context.url[0];
+            let name = context.url[0] || "";
 
             // If no user is set, start a new session
             // TODO: Debugging only! Remove later – only the register action should do this.

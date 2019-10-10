@@ -95,7 +95,7 @@ actions["character"] = context => {
 
             } else {
 
-                context.url.push("select")
+                context.url.push("select");
 
                 // Redirect to character selection
                 throw new InternalRedirect("character", context);
@@ -113,7 +113,7 @@ actions["character"] = context => {
         }
 
         // Get the character
-        context.text = `Viewing character #${id}`;
+        context.text += "";
 
     }
 

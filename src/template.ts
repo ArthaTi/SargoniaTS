@@ -8,8 +8,6 @@ export default (context: Context) => {
      */
     const show = (what: any) => what ? undefined : "display:none;";
 
-    console.log(context.character);
-
     // HTML template
     // TODO: Refactor to multiple functions with server-side jQuery – this way there will only be one code for both
     // the client and server necessary. The code is already similar enough it should be easy to do.
