@@ -2,6 +2,7 @@ import { actions } from "..";
 import Character from "../Character";
 import { requireLogin } from "../checks";
 import { InternalRedirect } from "../exceptions";
+import { QueryFailedError } from "typeorm";
 
 actions["character"] = async context => {
 
@@ -45,17 +46,36 @@ actions["character"] = async context => {
             // Matched, it's valid.
             else {
 
-                // Create the character
-                context.user!.currentCharacter = new Character(context.user!, name);
+                try {
 
-                // Save it to the database
-                await context.user!.currentCharacter.save();
+                    // Create the character
+                    context.user!.currentCharacter = new Character(context.user!, name);
 
-                // Make a request
-                context.url = ["character", context.user!.currentCharacter.id.toString()];
+                    // Save it to the database
+                    await context.user!.currentCharacter.save();
 
-                // Run the character
-                throw new InternalRedirect("character", context);
+                    // Make a request
+                    context.url = ["character", context.user!.currentCharacter.id.toString()];
+
+                    // Run the character
+                    throw new InternalRedirect("character", context);
+
+
+                }
+
+                // An exception was thrown
+                catch (e) {
+
+                    if (e instanceof QueryFailedError) {
+
+                        context.error = "Użytkownik o tej nazwie już istnieje.";
+
+                    }
+
+                    // Rethrow other exceptions
+                    else throw e;
+
+                }
 
             }
 

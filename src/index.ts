@@ -198,15 +198,11 @@ const res = __dirname + "/../res";
                 // Create a new user
                 context.user = new User("Yeet");
 
-                console.log("starting session");
-
                 // Create a new session
                 let session = new Session(context.user);
 
                 // Start a session
                 let id = await session.start();
-
-                console.log("session started");
 
                 // Send a cookie
                 response.setHeader("Set-Cookie", `session=${id}; path=/`);
