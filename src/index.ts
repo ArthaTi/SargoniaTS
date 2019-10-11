@@ -316,7 +316,7 @@ glob(__dirname + "/actions/*.js", async (_error, matches) => {
     // Connect to database
     connection = await createConnection({
 
-        type: "mysql",
+        type: "postgres",
         host: "localhost",
         username: "sargonia",
         password: "db8175",
