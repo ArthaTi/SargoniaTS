@@ -9,7 +9,7 @@ export default abstract class BaseEntity {
     private static loaded: { [type: string]: { [id: number]: BaseEntity } } = {};
 
     /**
-     * ID of the character.
+     * ID of the entity.
      */
     @PrimaryGeneratedColumn()
     id!: number;

@@ -2,6 +2,7 @@ import Fight from "./Fight";
 import BaseEntity from "./BaseEntity";
 import { Entity, Column, ManyToOne } from "typeorm";
 import User from "./User";
+import requirement from "./Validator";
 
 @Entity()
 export default class Character extends BaseEntity {
@@ -15,8 +16,20 @@ export default class Character extends BaseEntity {
     /**
      * Name of the character
      */
-    @Column({ unique: true })
-    name: string;
+    @Column("citext", { unique: true })
+    @requirement<string>(
+        name => typeof name === "string",
+        lang => lang.character.unnamed
+    )
+    @requirement<string>(
+        name => 3 <= name.length && name.length <= 20,
+        lang => lang.character.length
+    )
+    @requirement<string>(
+        name => !!name.match(/^[a-ząćęóśłżźń]+$/i),
+        lang => lang.character.invalid
+    )
+    name!: string;
 
     /**
      * Level of the character
@@ -45,12 +58,6 @@ export default class Character extends BaseEntity {
      * Current fight data
      */
     fight?: Fight;
-
-    constructor(owner?: User, name?: string) {
-        super();
-        this.owner = owner!;
-        this.name = name!;
-    }
 
     /**
      * XP required to reach the next level

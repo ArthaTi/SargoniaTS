@@ -1,17 +1,10 @@
 import Character from "./Character";
-import { RequestError } from "./exceptions";
-import { Entity, PrimaryGeneratedColumn, ManyToOne, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany } from "typeorm";
 import BaseEntity from "./BaseEntity";
 import Session from "./Session";
 
 @Entity()
 export default class User extends BaseEntity {
-
-    /**
-     * ID of the player
-     */
-    @PrimaryGeneratedColumn()
-    id!: number;
 
     @Column()
     name: string;

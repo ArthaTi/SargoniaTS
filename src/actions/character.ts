@@ -3,6 +3,7 @@ import Character from "../Character";
 import { requireLogin } from "../checks";
 import { InternalRedirect } from "../exceptions";
 import { QueryFailedError } from "typeorm";
+import { validate } from "../Validator";
 
 actions["character"] = async context => {
 
@@ -15,47 +16,23 @@ actions["character"] = async context => {
         // Submitted a character
         if (context.method === "POST") {
 
-            // Get the name
-            let name = context.data["name"];
+            // Create it
+            let character = new Character();
+            character.name = <string>context.data["name"];
 
-            // Validate data
-            if (typeof name !== "string") {
-
-                context.error = "Nadaj swojej postaci imię, by ją utworzyć.";
-
-            }
-
-            // Check length
-            else if (name.length < 3 || name.length > 20) {
-
-                context.error = "Imię postaci musi mieć od 3 do 20 znaków.";
-
-            }
-
-            // Check characters
-            else if (name.match(/[^a-ząćęóśłżźń]/i)) {
-
-                context.error = "Imię postaci musi składać się tylko z angielskich i polskich liter (nie może mieć "
-                    + "cyfr ani spacji)";
-
-            }
-
-            // TODO: Character name must be unique.
-            // Requires a database query.
-
-            // Matched, it's valid.
-            else {
+            // Validate the character
+            if (validate(context, character)) {
 
                 try {
 
-                    // Create the character
-                    context.user!.currentCharacter = new Character(context.user!, name);
+                    // Save the character to the database
+                    await character.save();
 
-                    // Save it to the database
-                    await context.user!.currentCharacter.save();
+                    // Assign as the current character
+                    context.user!.currentCharacter = character;
 
                     // Make a request
-                    context.url = ["character", context.user!.currentCharacter.id.toString()];
+                    context.url = ["character", character.id.toString()];
 
                     // Run the character
                     throw new InternalRedirect("character", context);
@@ -66,9 +43,11 @@ actions["character"] = async context => {
                 // An exception was thrown
                 catch (e) {
 
+                    // Insertion failed
                     if (e instanceof QueryFailedError) {
 
-                        context.error = "Użytkownik o tej nazwie już istnieje.";
+                        // Show an error
+                        context.error = context.language.character.duplicateName;
 
                     }
 

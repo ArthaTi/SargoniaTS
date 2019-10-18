@@ -10,6 +10,7 @@ import { createConnection, Connection } from "typeorm";
 import Character from "./Character";
 import "reflect-metadata";
 import Session from "./Session";
+import polish from "./languages/Polish";
 
 type Listener = (context: Context) => void | Promise<any>;
 
@@ -153,6 +154,7 @@ const res = __dirname + "/../res";
                 data: {},
                 text: "",
                 user: await Session.restore(request.headers["cookie"]),
+                language: polish
 
             };
 

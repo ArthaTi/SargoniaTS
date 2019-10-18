@@ -1,5 +1,6 @@
 import User from "./User";
 import { ParsedUrlQuery } from "querystring";
+import Language from "./languages/Language";
 
 export default interface Context extends Common.Api {
 
@@ -27,5 +28,10 @@ export default interface Context extends Common.Api {
      * Current user.
      */
     user?: User;
+
+    /**
+     * Language of the game.
+     */
+    language: Language;
 
 }
