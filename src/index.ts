@@ -80,8 +80,12 @@ export default async function run(action: string, context: Context) {
                 // Add a redirect to the context
                 context.redirect = e.target;
 
+                // Load the URL address
+                let segments = e.target.split("/").filter(a => a);
+                context.url = segments;
+
                 // Request the action
-                await run(e.action, e.context);
+                await run(segments[0], context);
 
                 // Stop – don't rethrow
                 return;

@@ -22,9 +22,9 @@ export class Redirect extends RequestError {
 
 export class InternalRedirect extends Redirect {
 
-    constructor(public action: string, public context: Context) {
+    constructor(target: string, public context: Context) {
 
-        super(`/${action}/` + context.url.slice(1).join("/"));
+        super(target);
 
     }
 

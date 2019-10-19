@@ -1,14 +1,11 @@
 import { actions } from "..";
 import Character from "../Character";
-import { requireLogin } from "../checks";
+import checkContext, { requireLogin } from "../checks";
 import { InternalRedirect } from "../exceptions";
 import { QueryFailedError } from "typeorm";
 import { validate } from "../Validator";
 
-actions["character"] = async context => {
-
-    // Require login
-    requireLogin(context);
+actions["character"] = checkContext(requireLogin, async context => {
 
     // Requested character creation
     if (context.url[1] === "new") {
@@ -29,13 +26,10 @@ actions["character"] = async context => {
                     await character.save();
 
                     // Assign as the current character
-                    context.user!.currentCharacter = character;
-
-                    // Make a request
-                    context.url = ["character", character.id.toString()];
+                    context.user.currentCharacter = character;
 
                     // Run the character
-                    throw new InternalRedirect("character", context);
+                    throw new InternalRedirect(`/character/${character.id}`, context);
 
 
                 }
@@ -61,18 +55,18 @@ actions["character"] = async context => {
         }
 
         // Show character creation screen
-        context.title = "Utwórz postać";
-        context.inputs = [{ name: "name", label: "Nazwa postaci" }];
+        context.title = context.language.character.create;
+        context.inputs = [{ name: "name", label: context.language.character.name }];
 
     }
 
     // Show character selection screen
     else if (context.url[1] === "select") {
 
-        context.title = "Wybierz postać";
+        context.title = context.language.character.select;
         context.actions = [
 
-            [{ text: "Utwórz postać", url: "/character/new" }],
+            [{ text: context.language.character.create, url: "/character/new" }],
 
         ];
 
@@ -90,17 +84,13 @@ actions["character"] = async context => {
             // User is logged in and has a character picked
             if (context.user && context.user.currentCharacter) {
 
-                context.url.push(context.user.currentCharacter.id.toString());
-
                 // Yeet him into his profile
-                throw new InternalRedirect("character", context);
+                throw new InternalRedirect(`/character/${context.user.currentCharacter.id}`, context);
 
             } else {
 
-                context.url.push("select");
-
                 // Redirect to character selection
-                throw new InternalRedirect("character", context);
+                throw new InternalRedirect("/character/select", context);
 
             }
 
@@ -109,7 +99,7 @@ actions["character"] = async context => {
         // Invalid ID
         if (id === undefined) {
 
-            context.error = "Nieprawidłowe ID postaci.";
+            context.error = context.language.character.invalidID;
             return;
 
         }
@@ -130,4 +120,4 @@ actions["character"] = async context => {
 
     }
 
-};
+});

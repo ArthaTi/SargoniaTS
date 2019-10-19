@@ -23,11 +23,11 @@ export default class Character extends BaseEntity {
     )
     @requirement<string>(
         name => 3 <= name.length && name.length <= 20,
-        lang => lang.character.length
+        lang => lang.character.nameLength
     )
     @requirement<string>(
         name => !!name.match(/^[a-ząćęóśłżźń]+$/i),
-        lang => lang.character.invalid
+        lang => lang.character.invalidName
     )
     name!: string;
 
