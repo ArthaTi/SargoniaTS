@@ -95,7 +95,10 @@ export default (context: Context) => {
                     ),
 
                     // Current progress
-                    wrap("span", { class: "progress-fill", style: `width:${(context.progress || 0) * 100}%` })
+                    wrap("span", {
+                        id: "nav-progress", class: "progress-fill",
+                        style: `width:${context.progress * 100}%`
+                    })
 
                 ),
 
@@ -217,16 +220,24 @@ export default (context: Context) => {
     );
 
     // JSON template
-    else if (context.type === "json") return JSON.stringify({
+    else if (context.type === "json") {
 
-        redirect: context.redirect,
-        title: context.title,
-        text: context.text,
-        error: context.error,
-        actions: context.actions,
-        inputs: context.inputs,
-        character: context.character,
+        let response: Common.Api = {
 
-    });
+            redirect: context.redirect,
+            title: context.title,
+            text: context.text,
+            error: context.error,
+            actions: context.actions,
+            inputs: context.inputs,
+            character: context.character,
+            progress: context.progress,
+
+        };
+
+        // Stringify the response
+        return JSON.stringify(response);
+
+    }
 
 };

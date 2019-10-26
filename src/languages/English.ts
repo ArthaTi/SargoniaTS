@@ -6,7 +6,8 @@ const english: Language = {
 
         notFound: "The page couldn't be found",
         level: "level",
-        levelAbbr: "lvl"
+        levelAbbr: "lvl",
+        invalidActionKey: "Given action key is invalid or expired. Might it be caused by a mistake in the URL?"
 
     },
     character: {
@@ -25,10 +26,14 @@ const english: Language = {
         invalidID: "No character with this ID/URL can be found. Perhaps you made a typo in the URL address?"
 
     },
-    area: {
+    exploration: {
 
         // Titles
-        selection: "Select area",
+        areaSelection: "Select area",
+
+        // General texts
+        ended: "Exploration finished!",
+        gained: what => `You've gained ${what.nominative}.`,
 
         // Errors
         invalidID: "No area with this ID/URL can be found. Perhaps you made a typo in the URL address?"

@@ -190,6 +190,7 @@ function displayData(data: Common.Api) {
 
     }
 
+    // Set character display
     {
 
         let $character = $("#character");
@@ -220,5 +221,8 @@ function displayData(data: Common.Api) {
         }
 
     }
+
+    // Set progress display
+    $("#nav-progress").css("width", `${data.progress * 100}%`);
 
 }

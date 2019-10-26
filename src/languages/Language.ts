@@ -20,6 +20,13 @@ export default interface Language {
          */
         notFound: string,
 
+        /**
+         * Action key is invalid or expired. This might be due to a mistake in the URL.
+         *
+         * Note that actions keys exist to prevent unwanted requests from other domains.
+         */
+        invalidActionKey: string,
+
     }
 
     /**
@@ -73,12 +80,26 @@ export default interface Language {
 
     }
 
-    area: {
+    /**
+     * All things exploration
+     */
+    exploration: {
 
         /**
          * Title for the area selection screen.
          */
-        selection: string,
+        areaSelection: string,
+
+        /**
+         * Shown when exploration ended.
+         */
+        ended: string,
+
+        /**
+         * List of stuff the player gained. Something along the lines: `You gained ${what}`.
+         * @param what List of items as a single string.
+         */
+        gained: (what: Declension) => string,
 
         /**
          * Error message shown when entering the area with an invalid ID (client error, shouldn't normally occur in
@@ -88,19 +109,19 @@ export default interface Language {
          */
         invalidID: string,
 
-    }
+    },
 
     /**
      * The character is already busy with something else.
      *
      * @param what The thing the character is doing. For example, "exploring a dungeon".
      */
-    busy: (what: PersonInflection<() => string>) => string,
+    busy: (what: PersonInflection) => string,
 
     /**
      * Leave the current event, eg. stop the current exploration.
      */
-    leave: (what: PersonInflection<() => string>) => string,
+    leave: (what: PersonInflection) => string,
 
     /**
      * Things the player can do. Sometimes included in other language texts.
@@ -113,7 +134,7 @@ export default interface Language {
         /**
          * Exploring something.
          */
-        exploring: (what: string) => PersonInflection<() => string>,
+        exploring: (what: string) => PersonInflection,
 
     }
 
@@ -121,7 +142,7 @@ export default interface Language {
 
 export type Dynamic<T = string> = (what: T) => string;
 
-export type Declension<T = string> = {
+export type Declension<T = () => string> = {
     nominative: T,
     accusative: T,
     genitive: T,
@@ -135,7 +156,7 @@ export type Declension<T = string> = {
 /**
  * Person inflection for the word.
  */
-export type PersonInflection<T = string> = {
+export type PersonInflection<T = () => string> = {
 
     singular?: {
 

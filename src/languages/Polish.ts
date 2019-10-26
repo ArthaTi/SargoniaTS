@@ -7,6 +7,7 @@ const polish: Language = {
         notFound: "Ta strona nie istnieje",
         level: "poziom",
         levelAbbr: "poz.",
+        invalidActionKey: "Podany klucz akcji jest nieważny lub nieprawidłowy. Może przez pomyłkę w adresie?"
 
     },
     character: {
@@ -25,10 +26,14 @@ const polish: Language = {
         invalidID: "Postać z tym ID/URL nie istnieje. Może w adresie jest literówka?"
 
     },
-    area: {
+    exploration: {
 
         // Titles
-        selection: "Wybierz teren",
+        areaSelection: "Wybierz teren",
+
+        // Texts
+        ended: "Eksploracja zakończona!",
+        gained: what => `Uzyskałeś ${what.accusative}.`,
 
         // Errors
         invalidID: "Teren z tym ID/URL nie istnieje. Może w adresie jest literówka?"

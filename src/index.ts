@@ -150,6 +150,7 @@ const res = __dirname + "/../res";
         catch (error) {
 
             // Create the context
+            // TODO: Rewrite this into an object, not an interface. Would make stuff easier.
             let context: Context = {
 
                 url: request.url!.split("/").filter(v => v),
@@ -158,7 +159,8 @@ const res = __dirname + "/../res";
                 data: {},
                 text: "",
                 user: await Session.restore(request.headers["cookie"]),
-                language: polish
+                language: polish,
+                progress: 0,
 
             };
 

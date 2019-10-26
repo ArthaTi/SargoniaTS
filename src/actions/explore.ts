@@ -1,10 +1,11 @@
 import { actions } from "..";
 import checkContext, { exclusiveEvent } from "../checks";
-import ExplorationEvent from "../ExplorationEvent";
+import ExplorationEvent from "../events/ExplorationEvent";
 import areas from "../data/areas";
 import Area from "../Area";
 import Context from "../Context";
 import { InternalRedirect } from "../exceptions";
+import { randomRange } from "../utils";
 
 actions["explore"] = checkContext(exclusiveEvent(ExplorationEvent), async context => {
 
@@ -13,10 +14,57 @@ actions["explore"] = checkContext(exclusiveEvent(ExplorationEvent), async contex
     // An exploration has already started
     if (event) {
 
-        // TODO
+        // Get the action
+        let action = event.getAction(context.url[1]);
+
+        // Continuing the exploration
+        if (action === "continue") {
+
+            // Increment step
+            event.step++;
+
+        }
+
+        // Leave the exploration
+        else if (action === "leave") {
+
+            // Leave the exploration
+            event.leave(context);
+
+            // Stop the event
+            context.user.currentCharacter.event = undefined;
+
+        }
+
+        // If the action ID was given but invalid
+        else if (context.url[1]) {
+
+            context.error = context.language.general.invalidActionKey;
+
+        }
+
+        // Display the data
         context.title = event.area.name;
-        context.text = "Test";
-        context.progress = 0.5;
+        context.progress = event.step / event.area.length;
+
+        // If the event is still happening
+        if (event === context.user.currentCharacter.event) {
+
+            // Show actions
+            context.actions = [
+                [
+                    {
+                        text: "Continue",
+                        url: "/explore/" + event.addAction("continue"),
+                    },
+                    {
+                        text: "End",
+                        url: "/explore/" + event.addAction("leave"),
+                    }
+                ]
+            ];
+
+        }
 
     }
 
@@ -42,8 +90,9 @@ actions["explore"] = checkContext(exclusiveEvent(ExplorationEvent), async contex
             // It doesn't
             else {
 
+                // TODO: This might show up when refreshing after ending an exploration. Fix it.
                 // Show an error
-                context.error = context.language.area.invalidID;
+                context.error = context.language.exploration.invalidID;
 
             }
 
@@ -64,7 +113,7 @@ function displayMap(context: Context) {
     if (!context.actions) context.actions = [];
 
     // Set context data
-    context.title = context.language.area.selection;
+    context.title = context.language.exploration.areaSelection;
 
     // Get each area
     for (let areaID in areas) {

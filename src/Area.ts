@@ -12,9 +12,17 @@ export abstract class InputArea {
      */
     level!: number;
 
+    /**
+     * Length of the area, i.e. minimum amount of steps to finish.
+     */
+    length? = 10;
+
 }
 
 export default class Area extends InputArea {
+
+    // Make length required
+    length: number = 10;
 
     constructor(base: InputArea) {
 

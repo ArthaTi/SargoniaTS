@@ -3,7 +3,7 @@ import BaseEntity from "./BaseEntity";
 import { Entity, Column, ManyToOne } from "typeorm";
 import User from "./User";
 import requirement from "./Validator";
-import Event from "./Event";
+import Event from "./events/Event";
 
 @Entity()
 export default class Character extends BaseEntity {

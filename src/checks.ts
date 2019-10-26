@@ -2,7 +2,7 @@ import Context from "./Context";
 import { InternalRedirect } from "./exceptions";
 import User from "./User";
 import Character from "./Character";
-import Event from "./Event";
+import Event from "./events/Event";
 
 export type UserContext = Context & { user: User };
 export type CharacterContext = Context & { user: User & { currentCharacter: Character } };
