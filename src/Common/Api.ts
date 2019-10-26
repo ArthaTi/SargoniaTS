@@ -55,6 +55,11 @@ namespace Common {
 
         };
 
+        /**
+         * Fraction of the progress bar to be filled.
+         */
+        progress?: number;
+
     }
 
 }

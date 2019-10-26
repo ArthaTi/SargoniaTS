@@ -2,11 +2,9 @@ import Area from "../Area";
 
 export const edenlage = new Area({
 
-    name: "Edenlage",
+    name: "The Wild Forest",
     level: 1,
 
 });
 
-export default [
-    edenlage,
-];
+export default <{ [name: string]: Area }>module.exports;

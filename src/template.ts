@@ -95,7 +95,7 @@ export default (context: Context) => {
                     ),
 
                     // Current progress
-                    wrap("span", { class: "progress-fill", style: "width:0%" })
+                    wrap("span", { class: "progress-fill", style: `width:${(context.progress || 0) * 100}%` })
 
                 ),
 
