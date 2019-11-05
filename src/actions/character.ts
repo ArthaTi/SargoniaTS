@@ -5,7 +5,7 @@ import { InternalRedirect } from "../exceptions";
 import { QueryFailedError } from "typeorm";
 import { validate } from "../Validator";
 
-actions["character"] = checkContext(requireLogin, async context => {
+actions["character"] = actions["characters"] = checkContext(requireLogin, async context => {
 
     // Requested character creation
     if (context.url[1] === "new") {
@@ -25,9 +25,6 @@ actions["character"] = checkContext(requireLogin, async context => {
                     // Save the character to the database
                     await character.save();
 
-                    // Assign as the current character
-                    context.user.currentCharacter = character;
-
                     // Run the character
                     throw new InternalRedirect(`/character/${character.id}`, context);
 
@@ -42,6 +39,20 @@ actions["character"] = checkContext(requireLogin, async context => {
 
                         // Show an error
                         context.error = context.language.character.duplicateName;
+
+                    }
+
+                    // Insertion succeeded
+                    else if (e instanceof InternalRedirect) {
+
+                        // Assign as the current character
+                        context.user.currentCharacter = character;
+
+                        // Save the user
+                        await context.user.save();
+
+                        // Rethrow the exception
+                        throw e;
 
                     }
 

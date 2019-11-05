@@ -17,6 +17,9 @@ const english: Language = {
         name: "Character name",
         select: "Select character",
 
+        // General texts
+        levelUp: "up",
+
         // Errors
         duplicateName: "A character with this name already exists.",
         unnamed: "Please name your character to create it.",
@@ -29,11 +32,21 @@ const english: Language = {
     exploration: {
 
         // Titles
+        title: "Exploration",
         areaSelection: "Select area",
 
-        // General texts
+        // Buttons
+        continue: "Continue",
+        end: "End",
+
+        // Ending
         ended: "Exploration finished!",
         gained: what => `You've gained ${what.nominative}.`,
+        startAnother: "Start another",
+
+        // Descriptions
+        lobby: "Welcome to the lobby. Here you can wait for other players and invite them to a team. However, you can "
+            + "always just continue and start the exploration right away.",
 
         // Errors
         invalidID: "No area with this ID/URL can be found. Perhaps you made a typo in the URL address?"

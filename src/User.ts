@@ -1,5 +1,5 @@
 import Character from "./Character";
-import { Entity, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, OneToOne, JoinColumn } from "typeorm";
 import BaseEntity from "./BaseEntity";
 import Session from "./Session";
 
@@ -27,6 +27,8 @@ export default class User extends BaseEntity {
     /**
      * Currently active character.
      */
+    @OneToOne(_type => Character, { nullable: true, cascade: true })
+    @JoinColumn()
     currentCharacter?: Character;
 
     // Current session ID

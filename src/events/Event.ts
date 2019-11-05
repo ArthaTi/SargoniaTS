@@ -1,6 +1,6 @@
 import Language, { PersonInflection } from "../languages/Language";
-import Context from "../Context";
 import * as crypto from "crypto";
+import { CharacterContext } from "../checks";
 
 export default abstract class Event {
 
@@ -22,7 +22,11 @@ export default abstract class Event {
     /**
      * Properly leave the event
      */
-    leave(_context?: Context): void { }
+    leave(_context: CharacterContext): void {
+
+        _context.user.currentCharacter.event = undefined;
+
+    }
 
     addAction(name: string): string {
 

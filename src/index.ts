@@ -213,7 +213,7 @@ const res = __dirname + "/../res";
                 let id = await session.start();
 
                 // Send a cookie
-                response.setHeader("Set-Cookie", `session=${id}; path=/`);
+                response.setHeader("Set-Cookie", `session=${id}; path=/; Max-Age=2147483647; HttpOnly`);
 
             }
 
@@ -250,6 +250,19 @@ const res = __dirname + "/../res";
             if (context.user && context.user.currentCharacter) {
 
                 let character = context.user.currentCharacter;
+                let up = false;
+
+                // Got new level
+                if (character.xp >= character.requiredXP()) {
+
+                    // Mark as new one
+                    up = true;
+
+                    // Add points
+                    context.user.currentCharacter.attributes.points += 5;
+                    context.user.currentCharacter.abilities.points += 2;
+
+                }
 
                 // Set the character
                 context.character = {
@@ -260,6 +273,7 @@ const res = __dirname + "/../res";
                     levelProgress: (character.xp - character.requiredXP(character.level - 1)) * 100
                         / character.requiredXP(),
                     xpLeft: character.requiredXP() - character.xp,
+                    levelUp: up,
 
                 };
 

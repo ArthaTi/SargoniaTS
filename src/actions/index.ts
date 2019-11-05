@@ -1,29 +1,38 @@
 import { actions } from "..";
+import { InternalRedirect } from "../exceptions";
 
 actions[""] = context => {
 
     context.title = "Sargonia";
-    context.actions = [];
 
     // Not logged in
     if (!context.user) {
 
+        // TODO
         return;
 
     }
 
-    // No character selected
+    // No character chosen
     if (!context.user.currentCharacter) {
 
-        let options: Common.ActionLink[] = [];
-
-        // If the player has some character
-        if (context.user.characters)
-
-        // Add the options to list
-        context.actions.push(options);
-        return;
+        throw new InternalRedirect("/character/new", context);
 
     }
+
+    // Other actions
+    context.actions = [
+
+        // General events
+        [
+
+            {
+                text: context.language.exploration.title,
+                url: "/explore"
+            }
+
+        ]
+
+    ];
 
 };

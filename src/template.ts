@@ -86,8 +86,22 @@ export default (context: Context) => {
                             wrap("span", { class: "level" },
                                 context.character ? `Poziom ${context.character.level}` : ""
                             ),
-                            wrap("span", { class: "xp-left", title: "XP do następnego poziomu" },
+                            wrap("span",
+                                {
+                                    class: "xp-counter xp-left", title: "XP do następnego poziomu",
+                                    style: show(context.character && !context.character.levelUp)
+                                },
+
+                                // No character – empty label
                                 context.character ? `${context.character.xpLeft} XP` : ""
+
+                            ),
+                            wrap("span",
+                                {
+                                    class: "xp-counter level-up", title: "",
+                                    style: show(!context.character || context.character.levelUp)
+                                },
+                                context.language.character.levelUp
                             ),
 
                         )
@@ -97,7 +111,7 @@ export default (context: Context) => {
                     // Current progress
                     wrap("span", {
                         id: "nav-progress", class: "progress-fill",
-                        style: `width:${context.progress * 100}%`
+                        style: `width:${Math.min(context.progress * 100, 100)}%`
                     })
 
                 ),
@@ -231,7 +245,7 @@ export default (context: Context) => {
             actions: context.actions,
             inputs: context.inputs,
             character: context.character,
-            progress: context.progress,
+            progress: Math.min(context.progress, 1),
 
         };
 

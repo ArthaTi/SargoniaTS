@@ -52,6 +52,7 @@ namespace Common {
             level: number;
             levelProgress: number;
             xpLeft: number;
+            levelUp?: boolean;
 
         };
 

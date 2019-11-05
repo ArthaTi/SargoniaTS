@@ -126,8 +126,9 @@
         /* Padding */
         padding: 5px 10px;
 
-        /* 100px width, never more than 100% */
-        min-width: 100px;
+        /* 150px width, never more than 100% */
+        transition: width 2.5s;
+        min-width: 150px;
         max-width: 100%;
     }
 
@@ -171,7 +172,7 @@
     }
 
     /* Character level and XP caption */
-    #character .level, #character .xp-left {
+    #character .level, #character .xp-counter {
 
         /* Smaller font */
         font-size: 0.7em;
@@ -188,7 +189,7 @@
 
     }
 
-    #character .xp-left {
+    #character .xp-counter {
 
         float: right;
         margin-left: 5px;
@@ -283,6 +284,9 @@
         /* Add a margin above and below, center within the parent */
         margin: 1em auto;
 
+        /* Align children to center */
+        text-align: center;
+
     }
 
     /* Rows */
@@ -342,7 +346,13 @@
         /* 4 px height */
         height: 4px;
 
+        /* Limit width to parent */
+        max-width: 100%;
+
         /* Orange content */
         background: orange;
+
+        /* Animate width */
+        transition: width 0.5s;
 
     }

@@ -78,6 +78,12 @@ export default interface Language {
          */
         invalidID: string,
 
+        /**
+         * Text shown in the character under the bar when a new level is reached. Keep it as short as possible, don't
+         * include the word "level" in it (it's already there) – for example "up" instead of "level up".
+         */
+        levelUp: string,
+
     }
 
     /**
@@ -86,9 +92,24 @@ export default interface Language {
     exploration: {
 
         /**
+         * Title for the exploration, used for example to link it.
+         */
+        title: string,
+
+        /**
          * Title for the area selection screen.
          */
         areaSelection: string,
+
+        /**
+         * Continue button.
+         */
+        continue: string,
+
+        /**
+         * End button.
+         */
+        end: string,
 
         /**
          * Shown when exploration ended.
@@ -100,6 +121,18 @@ export default interface Language {
          * @param what List of items as a single string.
          */
         gained: (what: Declension) => string,
+
+        /**
+         * Button to start another exploration after ending one.
+         */
+        startAnother: string,
+
+        /**
+         * Waiting room description – the step 0 of each exploration.
+         *
+         * No events happen there, the player can wait for other players to form up a team.
+         */
+        lobby: string,
 
         /**
          * Error message shown when entering the area with an invalid ID (client error, shouldn't normally occur in

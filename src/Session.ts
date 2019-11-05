@@ -85,7 +85,13 @@ export default class Session extends BaseEntity {
             if (isNaN(id)) return;
 
             // Load the session
-            let session = await Session.load(id, { relations: ["user"] });
+            let session = await Session.load(id, { join: {
+                alias: "session",
+                leftJoinAndSelect: {
+                    "user": "session.user",
+                    "currentCharacter": "user.currentCharacter",
+                }
+            } });
 
             // Session must exist
             if (!session) return;

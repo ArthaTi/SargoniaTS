@@ -17,6 +17,9 @@ const polish: Language = {
         name: "Nazwa postaci",
         select: "Wybierz postać",
 
+        // Texts
+        levelUp: "Nowy",
+
         // Errors
         duplicateName: "Ta nazwa postaci jest już zajęta.",
         unnamed: "Nadaj swojej postaci imię, by ją utworzyć.",
@@ -29,11 +32,21 @@ const polish: Language = {
     exploration: {
 
         // Titles
+        title: "Eksploruj",
         areaSelection: "Wybierz teren",
 
-        // Texts
+        // Buttons
+        continue: "Kontynuuj",
+        end: "Zakończ",
+
+        // Exploration ended
         ended: "Eksploracja zakończona!",
         gained: what => `Uzyskałeś ${what.accusative}.`,
+        startAnother: "Rozpocznij kolejną",
+
+        // Descriptions
+        lobby: "Witaj w poczekalni. Możesz tu poczekać na innych graczy by zaprosić ich do drużyny by eksplorować "
+            + "razem. Oczywiście, możesz po prostu to zignorować i kontynuować samotnie.",
 
         // Errors
         invalidID: "Teren z tym ID/URL nie istnieje. Może w adresie jest literówka?"

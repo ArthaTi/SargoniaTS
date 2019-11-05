@@ -4,6 +4,7 @@ import { Entity, Column, ManyToOne } from "typeorm";
 import User from "./User";
 import requirement from "./Validator";
 import Event from "./events/Event";
+import { Attributes, Abilities } from "./Stats";
 
 @Entity()
 export default class Character extends BaseEntity {
@@ -59,6 +60,16 @@ export default class Character extends BaseEntity {
      * Current fight data
      */
     fight?: Fight;
+
+    /**
+     * Attributes of the character.
+     */
+    attributes: Attributes = new Attributes();
+
+    /**
+     * Abilities of the character.
+     */
+    abilities: Abilities = new Abilities();
 
     /**
      * XP required to reach the next level
