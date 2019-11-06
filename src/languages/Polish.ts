@@ -1,26 +1,26 @@
 import Language from "./Language";
 
-export type PolishDeclension<T = () => string> = {
+type PolishDeclension<T = () => string> = {
 
-    /** Mianownik (kto, co) */
+    /** 1. Mianownik (kto, co) */
     nominative: T,
 
-    /** Dopełniacz (kogo, czego) */
+    /** 2. Dopełniacz (kogo, czego) */
     genitive: T,
 
-    /** Celownik (komu, czemu) */
+    /** 3. Celownik (komu, czemu) */
     dative: T,
 
-    /** Biernik (kogo, co) */
+    /** 4. Biernik (kogo, co) */
     accusative: T,
 
-    /** Narzędnik (z kim, z czym) */
+    /** 5. Narzędnik (z kim, z czym) */
     instrumental: T,
 
-    /** Miejscownik (o kim, o czym) */
+    /** 6. Miejscownik (o kim, o czym) */
     locative: T,
 
-    /** Wołacz */
+    /** 7. Wołacz */
     vocative: T,
 
 };
@@ -64,7 +64,7 @@ const polish: Language = {
     },
     exploration: {
 
-        declension: {
+        declension: <PolishDeclension<string>>{
             nominative: "eksploracja",
             genitive: "eksploracji",
             dative: "eksploracji",
