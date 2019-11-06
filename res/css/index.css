@@ -313,6 +313,9 @@
         /* Display inline */
         display: inline-block;
 
+        /* Some margin */
+        margin: 5px 10px;
+
     }
 
 /* Misc. */

@@ -3,37 +3,37 @@ import { Column } from "typeorm";
 export class Attributes {
 
     @Column()
-    points = 0;
+    points: number = 0;
 
     @Column()
-    health = 100;
+    health: number = 100;
 
     @Column()
-    stamina = 50;
+    stamina: number = 50;
 
     @Column()
-    magic = 20;
+    magic: number = 20;
 
 }
 
 export class Abilities {
 
     @Column()
-    points = 0;
+    points: number = 0;
 
     @Column()
-    strength = 10;
+    strength: number = 10;
 
     @Column()
-    intelligence = 10;
+    intelligence: number = 10;
 
     @Column()
-    perception = 10;
+    perception: number = 10;
 
     @Column()
-    dexterity = 10;
+    dexterity: number = 10;
 
     @Column()
-    charisma = 10;
+    charisma: number = 10;
 
 }

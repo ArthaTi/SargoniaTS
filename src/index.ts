@@ -258,9 +258,15 @@ const res = __dirname + "/../res";
                     // Mark as new one
                     up = true;
 
+                    // Increment level
+                    character.level++;
+
                     // Add points
-                    context.user.currentCharacter.attributes.points += 5;
-                    context.user.currentCharacter.abilities.points += 2;
+                    character.attributes.points += 5;
+                    character.abilities.points += 2;
+
+                    // Save the character
+                    character.save();
 
                 }
 

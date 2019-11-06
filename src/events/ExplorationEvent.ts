@@ -124,8 +124,8 @@ export default class ExplorationEvent extends Event {
 
         context.progress = this.step / this.area.length;
 
-        // If the event is still happening
-        if (this === context.user.currentCharacter.event) {
+        // If the event is still happening or a dialog is shown
+        if (this === context.user.currentCharacter.event && !context.actions) {
 
             // Show actions
             context.actions = [

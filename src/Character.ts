@@ -64,11 +64,13 @@ export default class Character extends BaseEntity {
     /**
      * Attributes of the character.
      */
+    @Column(_type => Attributes)
     attributes: Attributes = new Attributes();
 
     /**
      * Abilities of the character.
      */
+    @Column(_type => Abilities)
     abilities: Abilities = new Abilities();
 
     /**

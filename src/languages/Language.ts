@@ -27,6 +27,20 @@ export default interface Language {
          */
         invalidActionKey: string,
 
+        /**
+         * A confirmation for leaving.
+         */
+        confirmLeaving: (what: Declension<string>) => string,
+
+    }
+
+    /**
+     * Some basic, simple words used for buttons. Should start with an uppercase letter.
+     */
+    simple: {
+        leave: string,
+        yes: string,
+        no: string,
     }
 
     /**
@@ -90,6 +104,11 @@ export default interface Language {
      * All things exploration
      */
     exploration: {
+
+        /**
+         * Declension of the word "exploration"
+         */
+        declension: Declension<string>,
 
         /**
          * Title for the exploration, used for example to link it.
@@ -175,15 +194,19 @@ export default interface Language {
 
 export type Dynamic<T = string> = (what: T) => string;
 
+/**
+ * Declension of a word. Feel free to only use those necessary. If the language doesn't have declension, you can just
+ * use the "nominative" property.
+ */
 export type Declension<T = () => string> = {
     nominative: T,
-    accusative: T,
-    genitive: T,
-    dative: T,
-    vocative: T,
-    locative: T,
-    instrumental: T,
-    [other: string]: T,
+    accusative?: T,
+    genitive?: T,
+    dative?: T,
+    vocative?: T,
+    locative?: T,
+    instrumental?: T,
+    [other: string]: T | undefined,
 };
 
 /**

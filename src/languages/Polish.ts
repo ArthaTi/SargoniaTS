@@ -1,5 +1,30 @@
 import Language from "./Language";
 
+export type PolishDeclension<T = () => string> = {
+
+    /** Mianownik (kto, co) */
+    nominative: T,
+
+    /** Dopełniacz (kogo, czego) */
+    genitive: T,
+
+    /** Celownik (komu, czemu) */
+    dative: T,
+
+    /** Biernik (kogo, co) */
+    accusative: T,
+
+    /** Narzędnik (z kim, z czym) */
+    instrumental: T,
+
+    /** Miejscownik (o kim, o czym) */
+    locative: T,
+
+    /** Wołacz */
+    vocative: T,
+
+};
+
 const polish: Language = {
 
     general: {
@@ -7,7 +32,15 @@ const polish: Language = {
         notFound: "Ta strona nie istnieje",
         level: "poziom",
         levelAbbr: "poz.",
-        invalidActionKey: "Podany klucz akcji jest nieważny lub nieprawidłowy. Może przez pomyłkę w adresie?"
+        invalidActionKey: "Podany klucz akcji jest nieważny lub nieprawidłowy. Może przez pomyłkę w adresie?",
+        confirmLeaving: dec => `Czy na pewno chcesz opuścić ${dec.accusative}?`,
+
+    },
+    simple: {
+
+        leave: "Opuść",
+        yes: "Tak",
+        no: "Nie"
 
     },
     character: {
@@ -30,6 +63,16 @@ const polish: Language = {
 
     },
     exploration: {
+
+        declension: {
+            nominative: "eksploracja",
+            genitive: "eksploracji",
+            dative: "eksploracji",
+            accusative: "eksplorację",
+            instrumental: "eksploracją",
+            locative: "eksploracji",
+            vocative: "eksploracjo",
+        },
 
         // Titles
         title: "Eksploruj",

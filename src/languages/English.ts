@@ -7,7 +7,14 @@ const english: Language = {
         notFound: "The page couldn't be found",
         level: "level",
         levelAbbr: "lvl",
-        invalidActionKey: "Given action key is invalid or expired. Might it be caused by a mistake in the URL?"
+        invalidActionKey: "Given action key is invalid or expired. Might it be caused by a mistake in the URL?",
+        confirmLeaving: what => `Are you sure you want to leave the ${what.nominative}?`,
+    },
+    simple: {
+
+        leave: "Leave",
+        yes: "Yes",
+        no: "No",
 
     },
     character: {
@@ -30,6 +37,10 @@ const english: Language = {
 
     },
     exploration: {
+
+        declension: {
+            nominative: "exploration"
+        },
 
         // Titles
         title: "Exploration",

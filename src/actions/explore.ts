@@ -7,7 +7,7 @@ import { InternalRedirect } from "../exceptions";
 
 actions["explore"] = actions["exploration"] = checkContext(exclusiveEvent(ExplorationEvent), async context => {
 
-    let event = context.user.currentCharacter.event!;
+    let event = context.user.currentCharacter.event;
 
     // An exploration has already started
     if (event) {
@@ -25,6 +25,32 @@ actions["explore"] = actions["exploration"] = checkContext(exclusiveEvent(Explor
 
         // Leave the exploration
         else if (action === "leave") {
+
+            // Ask for confirmation
+            context.text = context.language.general.confirmLeaving(context.language.exploration.declension);
+
+            // Add options
+            context.actions = [
+
+                [
+                    {
+                        text: context.language.simple.no,
+                        url: "/explore",
+                        inline: true,
+                    },
+                    {
+                        text: context.language.simple.leave,
+                        url: "/explore/" + event.addAction("leave:ok"),
+                        inline: true,
+                    }
+                ]
+
+            ];
+
+        }
+
+        // Leave the exploration – confirmed
+        else if (action === "leave:ok") {
 
             // Leave the exploration
             event.leave(context);
