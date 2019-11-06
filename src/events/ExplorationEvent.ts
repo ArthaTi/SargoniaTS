@@ -8,6 +8,8 @@ import { randomRange } from "../utils";
 
 export default class ExplorationEvent extends Event {
 
+    primaryAction = "explore";
+
     /**
      * Current step in the exploration.
      */
@@ -32,7 +34,7 @@ export default class ExplorationEvent extends Event {
     constructor(public area: Area) {
 
         super();
-        this.status = (lang: Language) => lang.actions.exploring(area.name);
+        this.status = (lang: Language) => lang.exploration.inflection(area.name(lang));
 
     }
 
@@ -97,7 +99,7 @@ export default class ExplorationEvent extends Event {
 
     status(lang: Language) {
 
-        return lang.actions.exploring(this.area.name);
+        return lang.exploration.inflection(this.area.name(lang));
 
     }
 

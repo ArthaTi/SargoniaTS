@@ -30,7 +30,7 @@ export default interface Language {
         /**
          * A confirmation for leaving.
          */
-        confirmLeaving: (what: Declension<string>) => string,
+        confirmLeaving: (what: Declension) => string,
 
     }
 
@@ -108,7 +108,12 @@ export default interface Language {
         /**
          * Declension of the word "exploration"
          */
-        declension: Declension<string>,
+        declension: Declension,
+
+        /**
+         * Person inflection of the word.
+         */
+        inflection: (what: Declension) => PersonInflection,
 
         /**
          * Title for the exploration, used for example to link it.
@@ -164,6 +169,15 @@ export default interface Language {
     },
 
     /**
+     * Name of available areas
+     */
+    areas: {
+
+        wildForest: Declension
+
+    },
+
+    /**
      * The character is already busy with something else.
      *
      * @param what The thing the character is doing. For example, "exploring a dungeon".
@@ -176,19 +190,9 @@ export default interface Language {
     leave: (what: PersonInflection) => string,
 
     /**
-     * Things the player can do. Sometimes included in other language texts.
-     *
-     * One example of use would be a status text, for example "exploring the Wild Forest". First letter should
-     * preferrably be lowercase.
+     * Continue the current event.
      */
-    actions: {
-
-        /**
-         * Exploring something.
-         */
-        exploring: (what: string) => PersonInflection,
-
-    }
+    return: (what: PersonInflection) => string,
 
 }
 
@@ -198,7 +202,7 @@ export type Dynamic<T = string> = (what: T) => string;
  * Declension of a word. Feel free to only use those necessary. If the language doesn't have declension, you can just
  * use the "nominative" property.
  */
-export type Declension<T = () => string> = {
+export type Declension<T = string> = {
     nominative: T,
     accusative?: T,
     genitive?: T,
@@ -212,7 +216,7 @@ export type Declension<T = () => string> = {
 /**
  * Person inflection for the word.
  */
-export type PersonInflection<T = () => string> = {
+export type PersonInflection<T = string> = {
 
     singular?: {
 

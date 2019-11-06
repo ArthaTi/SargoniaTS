@@ -1,8 +1,9 @@
 import Area from "../Area";
+import Language from "../languages/Language";
 
-export const edenlage = new Area({
+export const wildForest = new Area({
 
-    name: "The Wild Forest",
+    name: (lang: Language) => lang.areas.wildForest,
     level: 1,
 
 });

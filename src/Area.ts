@@ -1,9 +1,11 @@
+import Language, { Declension } from "./languages/Language";
+
 export abstract class InputArea {
 
     /**
      * Name of the area.
      */
-    name!: string;
+    name!: (lang: Language) => Declension;
 
     /**
      * Recommended level of the area.

@@ -39,8 +39,12 @@ const english: Language = {
     exploration: {
 
         declension: {
-            nominative: "exploration"
+            nominative: "exploration",
         },
+        inflection: what => ({
+            verb: `Explore ${what.nominative}`,
+            impersonal: `Exploring ${what.nominative}`,
+        }),
 
         // Titles
         title: "Exploration",
@@ -63,17 +67,14 @@ const english: Language = {
         invalidID: "No area with this ID/URL can be found. Perhaps you made a typo in the URL address?"
 
     },
-    busy: doing => `You are currently busy ${doing.impersonal!()}. End doing it to continue here.`,
-    leave: doing => `Stop ${doing.impersonal!()}`,
-    actions: {
-
-        exploring: what => ({
-
-            impersonal: () => `exploring ${what}`
-
-        })
-
-    }
+    areas: {
+        wildForest: {
+            nominative: "The Wild Forest"
+        }
+    },
+    busy: doing => `You are currently busy ${doing.impersonal}. End doing it to continue here.`,
+    leave: doing => `Stop ${doing.impersonal}`,
+    return: doing => `Continue ${doing.impersonal}`
 
 };
 export default english;

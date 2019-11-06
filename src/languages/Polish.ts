@@ -1,27 +1,27 @@
-import Language from "./Language";
+import Language, { Declension } from "./Language";
 
-type PolishDeclension<T = () => string> = {
+type PolishDeclension<T = string> = {
 
-    /** 1. Mianownik (kto, co) */
+    /** 1\. Mianownik (kto, co) */
     nominative: T,
 
-    /** 2. Dopełniacz (kogo, czego) */
-    genitive: T,
+    /** 2\. Dopełniacz (kogo, czego) */
+    genitive?: T,
 
-    /** 3. Celownik (komu, czemu) */
-    dative: T,
+    /** 3\. Celownik (komu, czemu) */
+    dative?: T,
 
-    /** 4. Biernik (kogo, co) */
-    accusative: T,
+    /** 4\. Biernik (kogo, co) */
+    accusative?: T,
 
-    /** 5. Narzędnik (z kim, z czym) */
-    instrumental: T,
+    /** 5\. Narzędnik (z kim, z czym) */
+    instrumental?: T,
 
-    /** 6. Miejscownik (o kim, o czym) */
-    locative: T,
+    /** 6\. Miejscownik (o kim, o czym) */
+    locative?: T,
 
-    /** 7. Wołacz */
-    vocative: T,
+    /** 7\. Wołacz */
+    vocative?: T,
 
 };
 
@@ -73,6 +73,28 @@ const polish: Language = {
             locative: "eksploracji",
             vocative: "eksploracjo",
         },
+        inflection: (area: PolishDeclension<string>) => ({
+
+            singular: {
+
+                first: `eksploruję ${area.accusative}`,
+                second: `eksplorujesz ${area.accusative}`,
+                third: `eksploruje ${area.accusative}`,
+
+            },
+
+            plural: {
+
+                first: `eksplorujemy ${area.accusative}`,
+                second: `eksplorujecie ${area.accusative}`,
+                third: `eksploruję ${area.accusative}`
+
+            },
+
+            impersonal: `eksplorować ${area.accusative}`
+
+        }),
+
 
         // Titles
         title: "Eksploruj",
@@ -95,33 +117,20 @@ const polish: Language = {
         invalidID: "Teren z tym ID/URL nie istnieje. Może w adresie jest literówka?"
 
     },
-    busy: action => `W tym momencie ${action.singular!.second()}. Zakończ to by kontynuować.`,
+    areas: {
+        wildForest: <PolishDeclension>{
+            nominative: "Dziki Las",
+            genitive: "Dzikiego Lasu",
+            dative: "Dzikiemu Lasowi",
+            accusative: "Dziki Las",
+            instrumental: "Dzikim Lasem",
+            locative: "Dzikim Lesie",
+            vocative: "Dziki Lesie"
+        }
+    },
+    busy: action => `W tym momencie ${action.singular!.second}. Zakończ to by kontynuować.`,
     leave: action => `Przestań ${action.impersonal}`,
-    actions: {
-
-        exploring: area => ({
-
-            singular: {
-
-                first: () => `eksploruję ${area}`,
-                second: () => `eksplorujesz ${area}`,
-                third: () => `eksploruje ${area}`,
-
-            },
-
-            plural: {
-
-                first: () => `eksplorujemy ${area}`,
-                second: () => `eksplorujecie ${area}`,
-                third: () => `eksploruję ${area}`
-
-            },
-
-            impersonal: () => `eksplorować ${area}`
-
-        }),
-
-    }
+    return: action => `Kontynuuj ${action.impersonal}`,
 
 };
 
