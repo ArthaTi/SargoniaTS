@@ -1,4 +1,5 @@
 import Language, { Declension } from "./languages/Language";
+import { InputEnemy } from "./Enemy";
 
 export abstract class InputArea {
 
@@ -18,6 +19,14 @@ export abstract class InputArea {
      * Length of the area, i.e. minimum amount of steps to finish.
      */
     length? = 10;
+
+    /**
+     * Enemies that can be encountered in the area.
+     *
+     * This is a list of enemy groups. A random group will be chosen and a given amount of enemies from it will be
+     * spawned. A group can be represented by a single EnemyInput object or by an array of those.
+     */
+    enemies?: (InputEnemy[] & { count?: [number, number] } | InputEnemy)[];
 
 }
 

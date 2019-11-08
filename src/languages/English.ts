@@ -7,7 +7,6 @@ const english: Language = {
         notFound: "The page couldn't be found",
         level: "level",
         levelAbbr: "lvl",
-        invalidActionKey: "Given action key is invalid or expired. Might it be caused by a mistake in the URL?",
         confirmLeaving: what => `Are you sure you want to leave the ${what.nominative}?`,
     },
     simple: {
@@ -42,12 +41,16 @@ const english: Language = {
             nominative: "exploration",
         },
         inflection: what => ({
-            verb: `Explore ${what.nominative}`,
-            impersonal: `Exploring ${what.nominative}`,
+            impersonal: `exploring ${what.nominative}`,
+            singular: {
+                first: `explore ${what.nominative}`,
+                second: `explore ${what.nominative}`,
+                third: `explores ${what.nominative}`,
+            }
         }),
 
         // Titles
-        title: "Exploration",
+        title: "Explore",
         areaSelection: "Select area",
 
         // Buttons
@@ -67,10 +70,38 @@ const english: Language = {
         invalidID: "No area with this ID/URL can be found. Perhaps you made a typo in the URL address?"
 
     },
+    fight: {
+
+        declension: {
+            nominative: "fight",
+        },
+        inflection: {
+            impersonal: "fighting",
+            singular: {
+                first: "fight",
+                second: "fight",
+                third: "fights"
+            }
+        },
+
+        // Actions
+        wait: "Wait for your turn...",
+
+    },
     areas: {
+
         wildForest: {
             nominative: "The Wild Forest"
         }
+
+    },
+    enemies: {
+
+        rabbit: { nominative: "rabbit" },
+        boar: { nominative: "boar" },
+        deer: { nominative: "deer" },
+        wolf: { nominative: "wolf" },
+
     },
     busy: doing => `You are currently busy ${doing.impersonal}. End doing it to continue here.`,
     leave: doing => `Stop ${doing.impersonal}`,

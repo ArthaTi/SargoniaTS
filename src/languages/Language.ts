@@ -21,13 +21,6 @@ export default interface Language {
         notFound: string,
 
         /**
-         * Action key is invalid or expired. This might be due to a mistake in the URL.
-         *
-         * Note that actions keys exist to prevent unwanted requests from other domains.
-         */
-        invalidActionKey: string,
-
-        /**
          * A confirmation for leaving.
          */
         confirmLeaving: (what: Declension) => string,
@@ -116,7 +109,7 @@ export default interface Language {
         inflection: (what: Declension) => PersonInflection,
 
         /**
-         * Title for the exploration, used for example to link it.
+         * Title for the exploration as a verb, used for example to link it on the main page.
          */
         title: string,
 
@@ -169,11 +162,38 @@ export default interface Language {
     },
 
     /**
-     * Name of available areas
+     * Stuff about fighting.
+     */
+    fight: {
+
+        declension: Declension;
+        inflection: PersonInflection;
+
+        /**
+         * Text informing the player they have to wait for their turn.
+         */
+        wait: string,
+
+    },
+
+    /**
+     * Names of available areas.
      */
     areas: {
 
-        wildForest: Declension
+        wildForest: Declension,
+
+    },
+
+    /**
+     * Names of enemies.
+     */
+    enemies: {
+
+        rabbit: Declension,
+        boar: Declension,
+        deer: Declension,
+        wolf: Declension,
 
     },
 

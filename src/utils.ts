@@ -120,11 +120,17 @@ export function escapeHTML(str: string) {
 }
 
 /**
- * Get a random number in range.
+ * Get a random number in range [n, m] or [0, n).
  *
  * Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Examples
  */
-export function randomRange(min: number, max: number) {
+export function randomRange(min: number, max: number): number;
+export function randomRange(max: number): number;
+export function randomRange(min: number, max?: number) {
+    if (max === undefined) {
+        max = min - 1;
+        min = 0;
+    }
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;

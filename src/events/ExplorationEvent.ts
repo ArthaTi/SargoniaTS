@@ -5,6 +5,10 @@ import Context from "../Context";
 import { CharacterContext } from "../checks";
 import areas from "../data/areas";
 import { randomRange } from "../utils";
+import Enemy, { InputEnemy } from "../Enemy";
+import Fight from "../Fight";
+import FightEvent from "./FightEvent";
+import { InternalRedirect } from "../exceptions";
 
 export default class ExplorationEvent extends Event {
 
@@ -42,9 +46,6 @@ export default class ExplorationEvent extends Event {
 
         let actionList: Common.ActionLink[] = [];
 
-        // Create the context actions list
-        if (!context.actions) context.actions = [];
-
         // Set context data
         context.title = context.language.exploration.areaSelection;
 
@@ -59,7 +60,7 @@ export default class ExplorationEvent extends Event {
             // Add a new item to the list
             actionList.push({
 
-                text: `${area.name} (${context.language.general.levelAbbr} ${area.level})`,
+                text: `${area.name(context.language).nominative} (${context.language.general.levelAbbr} ${area.level})`,
                 url: `/explore/${areaID}`,
 
             });
@@ -74,7 +75,7 @@ export default class ExplorationEvent extends Event {
     leave(context: CharacterContext) {
 
         // Leave the event
-        super.leave(context);
+        super.leave!(context);
 
         // Save the character
         context.user.currentCharacter.save();
@@ -84,9 +85,6 @@ export default class ExplorationEvent extends Event {
 
         // Add text to it
         context.text += le.ended + "\n";
-
-        // Add actions
-        if (!context.actions) context.actions = [];
 
         context.actions.push([
             {
@@ -108,26 +106,26 @@ export default class ExplorationEvent extends Event {
      */
     fillContext(context: CharacterContext) {
 
-        // Step 0
-        if (this.step === 0) {
-
-            context.text += context.language.exploration.lobby + "\n";
-
-        }
-
         // Display the data
         context.title = this.step <= this.area.length
 
             // Include the target if not crossed the end
-            ? `${this.area.name} (${this.step}/${this.area.length})`
+            ? `${this.area.name(context.language).nominative} (${this.step}/${this.area.length})`
 
             // Bonus zone – don't show the target
-            : `${this.area.name} (${this.step})`;
+            : `${this.area.name(context.language).nominative} (${this.step})`;
 
         context.progress = this.step / this.area.length;
 
         // If the event is still happening or a dialog is shown
-        if (this === context.user.currentCharacter.event && !context.actions) {
+        if (this === context.user.currentCharacter.event && !context.actions.length) {
+
+            // Step 0
+            if (this.step === 0) {
+
+                context.text += context.language.exploration.lobby + "\n";
+
+            }
 
             // Show actions
             context.actions = [
@@ -142,6 +140,9 @@ export default class ExplorationEvent extends Event {
                     }
                 ]
             ];
+
+            // Restore context
+            super.fillContext(context);
 
         }
 
@@ -172,26 +173,67 @@ export default class ExplorationEvent extends Event {
                 context.user.currentCharacter.xp += this.xpCombo;
 
                 // Add description text
-                context.text += `+${this.xpCombo} XP`;
+                context.text += `+${this.xpCombo} XP\n`;
+
+                return;
 
             }
 
             // For other events, reset the XP combo
-            else this.xpCombo = 0;
+            this.xpCombo = 0;
 
-            // Random encounter
-            if (number === 2) {
+            // Random encounter, as long as there are any enemies available
+            if (number === 2 && this.area.enemies?.length) {
+
+                /** Enemies the player will fight */
+                let enemies: Enemy[] = [];
+
+                // Get a random enemy group
+                let groupP = this.area.enemies[randomRange(this.area.enemies.length)];
+
+                /** Chosen group of enemies */
+                let group: InputEnemy[] & { count?: [number, number] } = groupP instanceof Array ? groupP : [groupP];
+
+                // Get the opponent count
+                let count = group.count || [1, 3];
+
+                // Get the opponents
+                do {
+
+                    // Get a random enemy
+                    let input = group[randomRange(group.length)];
+
+                    // Add it to the team
+                    enemies.push(new Enemy(input));
+
+                }
+
+                // Repeat if there is less enemies than required, or on a 1/3 chance unless reached the limit
+                while (enemies.length < count[0] || enemies.length < count[1] && !randomRange(3));
+
+                // Create the fight
+                let fight = new Fight([context.user.currentCharacter]);
+
+                // Create and start the event
+                context.user.currentCharacter.event = new FightEvent(this, fight);
+
+                // Redirect to /fight
+                throw new InternalRedirect("/fight", context);
 
             }
 
             // Other random events, such as finding items
-            if (number === 3) {
+            else {
+
+                // There should always be some text. Even if this hasn't been implemented yet.
+                context.text += "Yeet\n";
 
             }
 
         }
 
         // Reached the end and no combo is active nor no other event started
+        // Note: !this.xpCombo might not be necessary
         if (this.step >= this.area.length && !this.xpCombo && this === context.user.currentCharacter.event) {
 
             // Leave the event

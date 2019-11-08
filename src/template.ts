@@ -187,7 +187,7 @@ export default (context: Context) => {
                     wrap("div", { id: "actions" },
 
                         // Map each context section
-                        !context.actions ? "" : context.actions.map(section =>
+                        context.actions.map(section =>
 
                             // Create a <div>
                             wrap("div", section.map(item => {

@@ -92,8 +92,8 @@ actions["character"] = actions["characters"] = checkContext(requireLogin, async 
         // If the URL doesn't contain the character ID
         if (context.url.length <= 1) {
 
-            // User is logged in and has a character picked
-            if (context.user && context.user.currentCharacter) {
+            // User has a character picked
+            if (context.user.currentCharacter) {
 
                 // Yeet him into his profile
                 throw new InternalRedirect(`/character/${context.user.currentCharacter.id}`, context);

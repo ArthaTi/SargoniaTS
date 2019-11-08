@@ -106,16 +106,19 @@ export function exclusiveEvent<T extends Event>(context: Context | Constructor<T
         // An option to quit the event
         if (currentEvent!.leave) {
 
-            // Create the context actions list
-            if (!context.actions) context.actions = [];
+            // Get the status
+            let status = currentEvent!.status(context.language);
 
             // Add a new section
             context.actions.push([
 
                 // With a link to quit the event
                 {
-                    text: context.language.leave(currentEvent!.status(context.language)),
-                    // TODO: link to the appropriate action
+                    text: context.language.leave(status),
+                },
+                {
+                    text: context.language.return(status),
+                    url: "/" + currentEvent?.primaryAction
                 }
 
             ]);

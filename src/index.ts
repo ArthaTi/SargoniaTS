@@ -11,6 +11,7 @@ import Character from "./Character";
 import "reflect-metadata";
 import Session from "./Session";
 import polish from "./languages/Polish";
+import { CharacterContext } from "./checks";
 
 type Listener = (context: Context) => void | Promise<any>;
 
@@ -151,18 +152,14 @@ const res = __dirname + "/../res";
 
             // Create the context
             // TODO: Rewrite this into an object, not an interface. Would make stuff easier.
-            let context: Context = {
+            let context = new Context({
 
                 url: request.url!.split("/").filter(v => v),
-                type: "html",
-                method: request.method!,
-                data: {},
+                method: request.method,
                 text: "",
                 user: await Session.restore(request.headers["cookie"]),
-                language: polish,
-                progress: 0,
 
-            };
+            });
 
             // Wait for data
             let data = await new Promise<string>(resolve => {
@@ -282,6 +279,14 @@ const res = __dirname + "/../res";
                     levelUp: up,
 
                 };
+
+                // If this is the primary action of the active event
+                if (character.event && character.event.primaryAction === context.url[0]) {
+
+                    // Fill the context
+                    character.event.fillContext(<CharacterContext>context);
+
+                }
 
             }
 

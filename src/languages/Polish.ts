@@ -32,7 +32,6 @@ const polish: Language = {
         notFound: "Ta strona nie istnieje",
         level: "poziom",
         levelAbbr: "poz.",
-        invalidActionKey: "Podany klucz akcji jest nieważny lub nieprawidłowy. Może przez pomyłkę w adresie?",
         confirmLeaving: dec => `Czy na pewno chcesz opuścić ${dec.accusative}?`,
 
     },
@@ -117,6 +116,35 @@ const polish: Language = {
         invalidID: "Teren z tym ID/URL nie istnieje. Może w adresie jest literówka?"
 
     },
+    fight: {
+
+        declension: <PolishDeclension>{
+            nominative: "walka",
+            genitive: "walki",
+            dative: "walce",
+            accusative: "walkę",
+            instrumental: "walką",
+            locative: "walce",
+            vocative: "walko",
+        },
+        inflection: {
+            impersonal: "walczyć",
+            singular: {
+                first: "walczę",
+                second: "walczysz",
+                third: "walczy"
+            },
+            plural: {
+                first: "walczymy",
+                second: "walczycie",
+                third: "walczą",
+            }
+        },
+
+        // Actions
+        wait: "Czekaj na swoją turę",
+
+    },
     areas: {
         wildForest: <PolishDeclension>{
             nominative: "Dziki Las",
@@ -127,6 +155,48 @@ const polish: Language = {
             locative: "Dzikim Lesie",
             vocative: "Dziki Lesie"
         }
+    },
+    enemies: {
+
+        // Wild forest
+        // They all have the same kind of declension. Perhaps this could be shortened with some function.
+        rabbit: <PolishDeclension>{
+            nominative: "zając",
+            genitive: "zająca",
+            dative: "zającowi",
+            accusative: "zająca",
+            instrumental: "zającem",
+            locative: "zającu",
+            vocative: "zającu"
+        },
+        boar: <PolishDeclension>{
+            nominative: "dzik",
+            genitive: "dzika",
+            dative: "dzikowi",
+            accusative: "dzika",
+            instrumental: "dzikiem",
+            locative: "dziku",
+            vocative: "dziku"
+        },
+        deer: <PolishDeclension>{
+            nominative: "jeleń",
+            genitive: "jelenia",
+            dative: "jeleniowi",
+            accusative: "jelenia",
+            instrumental: "jeleniem",
+            locative: "jeleniu",
+            vocative: "jeleniu",
+        },
+        wolf: <PolishDeclension>{
+            nominative: "wilk",
+            genitive: "wilka",
+            dative: "wilkowi",
+            accusative: "wilka",
+            instrumental: "wilkiem",
+            locative: "wilku",
+            vocative: "wilku"
+        },
+
     },
     busy: action => `W tym momencie ${action.singular!.second}. Zakończ to by kontynuować.`,
     leave: action => `Przestań ${action.impersonal}`,

@@ -171,7 +171,7 @@ function displayData(data: Common.Api) {
             }
 
             // Add submit button
-            if (data.inputs && data.inputs.length) {
+            if (data.inputs?.length) {
 
                 $("<input>")
                     .attr("type", "submit")

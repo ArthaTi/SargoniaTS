@@ -4,10 +4,11 @@ import { Entity, Column, ManyToOne } from "typeorm";
 import User from "./User";
 import requirement from "./Validator";
 import Event from "./events/Event";
-import { Attributes, Abilities } from "./Stats";
+import { AttributePoints, AbilityPoints, Attributes, Abilities } from "./Stats";
+import Fighter from "./Fighter";
 
 @Entity()
-export default class Character extends BaseEntity {
+export default class Character extends BaseEntity implements Fighter {
 
     /**
      * Owner of this character.
@@ -64,14 +65,42 @@ export default class Character extends BaseEntity {
     /**
      * Attributes of the character.
      */
-    @Column(_type => Attributes)
-    attributes: Attributes = new Attributes();
+    @Column(_type => AttributePoints)
+    attributes: AttributePoints = new AttributePoints();
 
     /**
      * Abilities of the character.
      */
-    @Column(_type => Abilities)
-    abilities: Abilities = new Abilities();
+    @Column(_type => AbilityPoints)
+    abilities: AbilityPoints = new AbilityPoints();
+
+    // Inherited
+    tempAttributes: Attributes = this.generalAttributes;
+    tempAbilities: Abilities = this.generalAbilities;
+
+    // Inherited
+    get generalAttributes() {
+
+        return new Attributes({
+            health: 100 + this.attributes.health * 2,
+            stamina: 50 + this.attributes.stamina,
+            magic: 25 + Math.floor(this.attributes.magic / 2),
+        });
+
+    }
+
+    // Inherited
+    get generalAbilities() {
+
+        return new Abilities({
+            strength: 5 + this.abilities.strength,
+            intelligence: 5 + this.abilities.intelligence,
+            perception: 5 + this.abilities.perception,
+            dexterity: 5 + this.abilities.dexterity,
+            charisma: 5 + this.abilities.charisma,
+        });
+
+    }
 
     /**
      * XP required to reach the next level

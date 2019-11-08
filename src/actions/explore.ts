@@ -27,7 +27,7 @@ actions["explore"] = actions["exploration"] = checkContext(exclusiveEvent(Explor
         else if (action === "leave") {
 
             // Ask for confirmation
-            context.text = context.language.general.confirmLeaving(context.language.exploration.declension);
+            context.text = context.language.general.confirmLeaving(context.language.exploration.declension) + "\n";
 
             // Add options
             context.actions = [
@@ -56,16 +56,6 @@ actions["explore"] = actions["exploration"] = checkContext(exclusiveEvent(Explor
             event.leave(context);
 
         }
-
-        // If the action ID was given but invalid
-        else if (context.url[1]) {
-
-            context.error = context.language.general.invalidActionKey;
-
-        }
-
-        // Display data
-        event.fillContext(context);
 
     }
 
