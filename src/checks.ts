@@ -4,10 +4,14 @@ import User from "./User";
 import Character from "./Character";
 import Event from "./events/Event";
 
-export type UserContext = Context & { user: User };
-export type CharacterContext = Context & { user: User & { currentCharacter: Character } };
-export type ExclusiveContext<T extends Event> = CharacterContext & { user: User & { currentCharacter: Character
-    & { event: T | undefined } } };
+export type UserContext = Context & { user: User; };
+export type CharacterContext = Context & { user: User & { currentCharacter: Character; }; };
+export type ExclusiveContext<T extends Event> = CharacterContext & {
+    user: User & {
+        currentCharacter: Character
+        & { event: T | undefined; };
+    };
+};
 
 // Let's hope one day it will be possible to convert this to decorator.
 
@@ -64,7 +68,7 @@ export function requireCharacter(context: Context): context is CharacterContext 
 }
 
 // Just for a better look
-type Constructor<T> = new(...a: any[]) => T;
+type Constructor<T> = new (...a: any[]) => T;
 
 /**
  * This function checks whether a character is assigned and whether if they're participating in a different kind
@@ -103,27 +107,32 @@ export function exclusiveEvent<T extends Event>(context: Context | Constructor<T
         // Show an error
         context.error = context.language.busy(currentEvent!.status(context.language));
 
+        // Add actions
+        let actions: Common.ActionLink[] = [];
+        context.actions.push(actions);
+
+        // Get the status
+        let status = currentEvent!.status(context.language);
+
         // An option to quit the event
         if (currentEvent!.leave) {
 
-            // Get the status
-            let status = currentEvent!.status(context.language);
+            // Add an option with a link to quit the event
+            actions.push({
 
-            // Add a new section
-            context.actions.push([
+                text: context.language.leave(status),
 
-                // With a link to quit the event
-                {
-                    text: context.language.leave(status),
-                },
-                {
-                    text: context.language.return(status),
-                    url: "/" + currentEvent?.primaryAction
-                }
-
-            ]);
+            });
 
         }
+
+        // Add a new
+        actions.push({
+
+            text: context.language.return(status),
+            url: "/" + currentEvent?.primaryAction,
+
+        });
 
         return false;
 

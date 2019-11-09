@@ -12,6 +12,34 @@ actions["fight"] = checkContext(exclusiveEvent(FightEvent), context => {
 
     }
 
-    //
+    // Get the event
+    let event = context.user.currentCharacter.event;
+
+    // Get the action
+    let action = event.getAction(context.url[1]);
+
+    // Mark as ready
+    if (action === "ready") {
+
+        // Mark as ready
+        event.markReady(context, context.url[2] !== "no");
+
+    }
+
+    // Targetting
+    if (action === "target") {
+
+        // Parse the context
+        let indexes = [
+
+            parseInt(context.url[2]),
+            parseInt(context.url[3]),
+
+        ];
+
+        // Change the target
+        event.target = event.fight.teams[indexes[0]]?.[indexes[1]];
+
+    }
 
 });

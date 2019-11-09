@@ -5,7 +5,7 @@ const english: Language = {
     general: {
 
         notFound: "The page couldn't be found",
-        level: "level",
+        level: "Level",
         levelAbbr: "lvl",
         confirmLeaving: what => `Are you sure you want to leave the ${what.nominative}?`,
     },
@@ -26,13 +26,18 @@ const english: Language = {
         // General texts
         levelUp: "up",
 
+        // Attributes
+        health: "Health",
+        stamina: "Stamina",
+        mana: "Mana",
+
         // Errors
         duplicateName: "A character with this name already exists.",
         unnamed: "Please name your character to create it.",
         nameLength: "Name of the character should be between 3 and 20 characters long.",
         invalidName: "Name of the character can only contain English and Polish characters (it can't contain numbers "
             + "nor spaces)",
-        invalidID: "No character with this ID/URL can be found. Perhaps you made a typo in the URL address?"
+        invalidID: "No character with this ID/URL can be found. Perhaps you made a typo in the URL address?",
 
     },
     exploration: {
@@ -84,8 +89,21 @@ const english: Language = {
             }
         },
 
+        readyCount: (n, outOf) => `${n} out of ${outOf} fighters are ready.`,
+
         // Actions
         wait: "Wait for your turn...",
+        imReady: "I'm ready!",
+        unready: "Wait, I'm not ready yet!",
+
+        // Teams
+        yourTeam: { nominative: "your team" },
+        playerTeam: leader => ({ nominative: `${leader}'s team` }),
+        enemyTeam: { nominative: "enemy team" },
+
+        // Other texts
+        ready: "Ready",
+        target: "Target"
 
     },
     areas: {
@@ -97,10 +115,10 @@ const english: Language = {
     },
     enemies: {
 
-        rabbit: { nominative: "rabbit" },
-        boar: { nominative: "boar" },
-        deer: { nominative: "deer" },
-        wolf: { nominative: "wolf" },
+        rabbit: { nominative: "Rabbit" },
+        boar: { nominative: "Boar" },
+        deer: { nominative: "Deer" },
+        wolf: { nominative: "Wolf" },
 
     },
     busy: doing => `You are currently busy ${doing.impersonal}. End doing it to continue here.`,

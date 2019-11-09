@@ -1,13 +1,23 @@
 import { Column } from "typeorm";
 
+type Numbers<T> = { [K in keyof T]: T[K] extends number ? K : never }[keyof T];
+
+/**
+ * Object representing a list of stats.
+ *
+ * Always provide a constructor, add a `superLoad()` call in it so the object can initialize properly.
+ */
 export abstract class Stats {
 
     /**
      * List of numeric keys in the stat.
      */
-    keys: (keyof this)[] = [];
+    keys: Numbers<Omit<this, "keys">>[] = [];
 
-    constructor() {
+    /**
+     * Load the keys. Required for cloning and other methods to work properly. Call this immediately after `super()`.
+     */
+    protected superLoad() {
 
         // Get numeric keys
         for (let key in this) {
@@ -16,7 +26,7 @@ export abstract class Stats {
             if (typeof this[key] !== "number") continue;
 
             // Add to list of keys
-            this.keys.push(key);
+            this.keys.push(<any>key);
 
         }
 
@@ -24,7 +34,7 @@ export abstract class Stats {
 
     clone() {
 
-        let obj = new (<new() => this>this.constructor)();
+        let obj = new (<new () => this>this.constructor)();
 
         // Copy each key
         for (let key of this.keys) {
@@ -34,6 +44,23 @@ export abstract class Stats {
         }
 
         return obj;
+
+    }
+
+    sum(other: this): this {
+
+        let obj = this.clone();
+        let test = [(this as Stats).keys[0]];
+
+        // Copy each key
+        for (let key of this.keys) {
+
+            // @ts-ignore This is entirely valid. TypeScript just can't understand that this will only evaluate if
+            // there are any numbers in the object.
+            obj[key] += other[key];
+
+        }
+        return <any>obj;
 
     }
 
@@ -51,12 +78,26 @@ export class Attributes extends Stats {
     stamina: number = 0;
 
     @Column()
-    magic: number = 0;
+    mana: number = 0;
 
     constructor(set?: Partial<Attributes>) {
 
         super();
+        this.superLoad();
         if (set) Object.assign(this, set);
+
+    }
+
+    /**
+     * Convert points to real values
+     */
+    realValues() {
+
+        return new Attributes({
+            health: this.health * 2,
+            stamina: this.stamina,
+            mana: Math.floor(this.mana / 2),
+        });
 
     }
 
@@ -85,6 +126,7 @@ export class Abilities extends Stats {
     constructor(set?: Partial<Abilities>) {
 
         super();
+        this.superLoad();
         if (set) Object.assign(this, set);
 
     }

@@ -17,6 +17,11 @@ namespace Common {
          */
         inline?: boolean;
 
+        /**
+         * View as a header (bold, uppercase)
+         */
+        header?: boolean,
+
     }
 
     export interface ActionInput {

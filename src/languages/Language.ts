@@ -57,6 +57,21 @@ export default interface Language {
         name: string,
 
         /**
+         * Name of the health attribute.
+         */
+        health: string,
+
+        /**
+         * Name of the stamina attribute.
+         */
+        stamina: string,
+
+        /**
+         * Name of the mana (magic) attribute.
+         */
+        mana: string,
+
+        /**
          * Error message shown when the character name is already in use.
          */
         duplicateName: string,
@@ -170,9 +185,50 @@ export default interface Language {
         inflection: PersonInflection;
 
         /**
+         * Count of ready players. Two arguments are supplied, one is the amount of players ready, the other
+         * is the amount of all players in the fight.
+         */
+        readyCount: (n: number, outOf: number) => string,
+
+        /**
          * Text informing the player they have to wait for their turn.
          */
         wait: string,
+
+        /**
+         * Text for the "I'm ready" button.
+         */
+        imReady: string,
+
+        /**
+         * Text for the "I'm not ready" button – undo being ready.
+         */
+        unready: string,
+
+        /**
+         * Title of the player's current team.
+         */
+        yourTeam: Declension,
+
+        /**
+         * Title of other player's team.
+         */
+        playerTeam: (leader: string) => Declension,
+
+        /**
+         * Title of enemy's team
+         */
+        enemyTeam: Declension,
+
+        /**
+         * Text indicating that a certain player is ready.
+         */
+        ready: string,
+
+        /**
+         * Title of the "target" screen.
+         */
+        target: string,
 
     },
 

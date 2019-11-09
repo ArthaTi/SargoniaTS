@@ -3,5 +3,6 @@
         "sargonia",
         "ząćęóśłżźń"
     ],
-    "cSpell.language": "pl,pl-PL,en,en-US"
+    "cSpell.language": "pl,pl-PL,en,en-US",
+    "typescript.tsdk": "node_modules/typescript/lib"
 }

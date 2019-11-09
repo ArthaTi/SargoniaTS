@@ -70,6 +70,10 @@ actions["explore"] = actions["exploration"] = checkContext(exclusiveEvent(Explor
             // Assign the event
             context.user.currentCharacter.event = new ExplorationEvent(area);
 
+            // Reset stats
+            context.user.currentCharacter.tempAttributes = context.user.currentCharacter.generalAttributes;
+            context.user.currentCharacter.tempAbilities = context.user.currentCharacter.generalAbilities;
+
             // Redirect to the status
             throw new InternalRedirect("/explore", context);
 

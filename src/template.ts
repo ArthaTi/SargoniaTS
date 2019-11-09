@@ -199,7 +199,10 @@ export default (context: Context) => {
                                         link.url ? "a" : "span",
                                         {
                                             href: link.url || undefined,
-                                            class: link.inline ? "inline" : undefined
+                                            class: [
+                                                link.inline ? "inline" : "",
+                                                link.header ? "header" : "",
+                                            ].join(" ")
                                         },
                                         link.text
                                     );

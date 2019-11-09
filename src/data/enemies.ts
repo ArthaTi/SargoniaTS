@@ -73,7 +73,7 @@ export const deer = new Enemy({
     attributeGrowth: new Attributes({
         health: 1,
         stamina: 2,
-        magic: 1,
+        mana: 1,
     }),
 
     abilities: new Abilities({
@@ -123,4 +123,4 @@ export const wolf = new Enemy({
 
 });
 
-export default <{ [name: string]: Enemy }>module.exports;
+export default <{ [name: string]: Enemy; }>module.exports;

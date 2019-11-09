@@ -1,4 +1,4 @@
-import { Attributes, Abilities, AttributePoints, AbilityPoints } from "./Stats";
+import { Attributes, Abilities, AttributePoints, AbilityPoints, Stats } from "./Stats";
 import { randomRange } from "./utils";
 import Fighter from "./Fighter";
 import Language, { Declension } from "./languages/Language";
@@ -48,8 +48,8 @@ export default class Enemy extends InputEnemy implements Fighter {
     level: number;
 
     // General attributes
-    generalAttributes: Attributes = new Attributes();
-    generalAbilities: Abilities = new Abilities();
+    generalAttributes: Attributes;
+    generalAbilities: Abilities;
     tempAttributes: Attributes;
     tempAbilities: Abilities;
 
@@ -61,9 +61,9 @@ export default class Enemy extends InputEnemy implements Fighter {
         // Get the level
         this.level = randomRange(...base.levelRange);
 
-        // Get the attributes and abilities
-        this.assignGrowth(this.generalAttributes, this.attributeGrowth);
-        this.assignGrowth(this.generalAbilities, this.abilityGrowth);
+        // Get the stats
+        this.generalAttributes = this.assignGrowth(this.attributeGrowth).realValues().sum(this.attributes);
+        this.generalAbilities = this.assignGrowth(this.abilityGrowth).sum(this.abilities);
 
         // Set current stats
         this.tempAttributes = this.generalAttributes.clone();
@@ -74,16 +74,13 @@ export default class Enemy extends InputEnemy implements Fighter {
     /**
      * Generate random object given a growth object.
      */
-    private assignGrowth<T extends any>(base: T, growth: T, points = this.level * 5 - 5) {
-
-        // Get the eligible iteration keys
-        let keys: (keyof T)[] = Object.keys(growth)
-
-            // Only accept numbers
-            .filter(val => typeof val === "number");
+    private assignGrowth<T extends Stats>(growth: T, points = this.level * 5 - 5): T {
 
         // Get the sum of the values
-        let max = keys.reduce<number>((prev, cur) => prev + growth[cur], 0);
+        let max = growth.keys.reduce<number>((prev, cur) => prev + <number><unknown>growth[cur], 0);
+
+        // Create a base object
+        let base = new (<new () => T>growth.constructor)();
 
         // Spend the points
         for (let i = 0; i < points; i++) {
@@ -93,16 +90,16 @@ export default class Enemy extends InputEnemy implements Fighter {
             let sum = 0;
 
             // Assign the growth
-            for (let key of keys) {
+            for (let key of growth.keys) {
 
                 // Sum the growth
-                sum += growth[key];
+                sum += <number><unknown>growth[key];
 
                 // If the item falls under it
                 if (number < sum) {
 
                     // Spend the point
-                    base[key]++;
+                    (<number><unknown>base[key])++;
 
                     // Stop assigning
                     break;
@@ -112,6 +109,8 @@ export default class Enemy extends InputEnemy implements Fighter {
             }
 
         }
+
+        return base;
 
     }
 

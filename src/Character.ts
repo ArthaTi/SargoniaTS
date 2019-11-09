@@ -6,6 +6,7 @@ import requirement from "./Validator";
 import Event from "./events/Event";
 import { AttributePoints, AbilityPoints, Attributes, Abilities } from "./Stats";
 import Fighter from "./Fighter";
+import Team from "./Team";
 
 @Entity()
 export default class Character extends BaseEntity implements Fighter {
@@ -53,14 +54,19 @@ export default class Character extends BaseEntity implements Fighter {
     lastUse: number = Date.now();
 
     /**
-     * Current events
+     * Current events.
      */
     event?: Event;
 
     /**
-     * Current fight data
+     * Current fight data.
      */
     fight?: Fight;
+
+    /**
+     * Team of the player.
+     */
+    team = new Team(lang => lang.fight.playerTeam(this.name), this);
 
     /**
      * Attributes of the character.
@@ -75,16 +81,16 @@ export default class Character extends BaseEntity implements Fighter {
     abilities: AbilityPoints = new AbilityPoints();
 
     // Inherited
-    tempAttributes: Attributes = this.generalAttributes;
-    tempAbilities: Abilities = this.generalAbilities;
-
-    // Inherited
     get generalAttributes() {
 
+        // Get real values
+        let real = this.attributes.realValues();
+
+        // Add base stats
         return new Attributes({
-            health: 100 + this.attributes.health * 2,
-            stamina: 50 + this.attributes.stamina,
-            magic: 25 + Math.floor(this.attributes.magic / 2),
+            health: 100 + real.health,
+            stamina: 50 + real.stamina,
+            mana: 25 + real.mana,
         });
 
     }
@@ -101,6 +107,10 @@ export default class Character extends BaseEntity implements Fighter {
         });
 
     }
+
+    // Inherited
+    tempAttributes: Attributes = this.generalAttributes;
+    tempAbilities: Abilities = this.generalAbilities;
 
     /**
      * XP required to reach the next level

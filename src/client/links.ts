@@ -15,13 +15,9 @@ function makeLink(parent: JQuery, link: Common.ActionLink) {
 
     }
 
-    // If it's inline
-    if (link.inline) {
-
-        // Add the .inline class
-        $item.addClass("inline");
-
-    }
+    // Add classes
+    if (link.inline) $item.addClass("inline");
+    if (link.header) $item.addClass("header");
 
     return $item
 

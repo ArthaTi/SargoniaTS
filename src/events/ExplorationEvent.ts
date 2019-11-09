@@ -9,6 +9,7 @@ import Enemy, { InputEnemy } from "../Enemy";
 import Fight from "../Fight";
 import FightEvent from "./FightEvent";
 import { InternalRedirect } from "../exceptions";
+import Team from "../Team";
 
 export default class ExplorationEvent extends Event {
 
@@ -179,6 +180,17 @@ export default class ExplorationEvent extends Event {
 
             }
 
+            // Reached the end and combo ended
+            else if (this.step >= this.area.length) {
+
+                // Leave
+                this.leave(context);
+
+                // Don't start any new events
+                return;
+
+            }
+
             // For other events, reset the XP combo
             this.xpCombo = 0;
 
@@ -186,7 +198,7 @@ export default class ExplorationEvent extends Event {
             if (number === 2 && this.area.enemies?.length) {
 
                 /** Enemies the player will fight */
-                let enemies: Enemy[] = [];
+                let enemies = new Team(lang => lang.fight.enemyTeam);
 
                 // Get a random enemy group
                 let groupP = this.area.enemies[randomRange(this.area.enemies.length)];
@@ -212,7 +224,7 @@ export default class ExplorationEvent extends Event {
                 while (enemies.length < count[0] || enemies.length < count[1] && !randomRange(3));
 
                 // Create the fight
-                let fight = new Fight([context.user.currentCharacter]);
+                let fight = new Fight([context.user.currentCharacter.team, enemies]);
 
                 // Create and start the event
                 context.user.currentCharacter.event = new FightEvent(this, fight);

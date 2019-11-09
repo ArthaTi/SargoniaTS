@@ -303,8 +303,8 @@
         /* Display as a block */
         display: block;
 
-        /* Add a small margin */
-        margin: 5px;
+        /* Add margin */
+        margin: 5px 20px;
     }
 
     /* .inline actions */
@@ -315,6 +315,17 @@
 
         /* Some margin */
         margin: 5px 10px;
+
+    }
+
+    /* .header actions */
+    #actions .header {
+
+        /* Bold display */
+        font-weight: 700;
+
+        /* Show in uppercase */
+        text-transform: uppercase;
 
     }
 

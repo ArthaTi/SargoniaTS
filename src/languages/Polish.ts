@@ -30,7 +30,7 @@ const polish: Language = {
     general: {
 
         notFound: "Ta strona nie istnieje",
-        level: "poziom",
+        level: "Poziom",
         levelAbbr: "poz.",
         confirmLeaving: dec => `Czy na pewno chcesz opuścić ${dec.accusative}?`,
 
@@ -51,6 +51,11 @@ const polish: Language = {
 
         // Texts
         levelUp: "Nowy",
+
+        // Attributes
+        health: "Zdrowie",
+        stamina: "Wytrzymałość",
+        mana: "Mana",
 
         // Errors
         duplicateName: "Ta nazwa postaci jest już zajęta.",
@@ -141,8 +146,45 @@ const polish: Language = {
             }
         },
 
+        readyCount: (n, outOf) => `${n} z ${outOf} walczących jest gotowych.`,
+
         // Actions
         wait: "Czekaj na swoją turę",
+        imReady: "Jestem gotowy!",
+        unready: "Chwila, nie jestem gotowy!",
+
+        // Teams
+        yourTeam: <PolishDeclension>{
+            nominative: "twoja drużyna",
+            genitive: "twojej drużyny",
+            dative: "twojej drużynie",
+            accusative: "twoją drużynę",
+            instrumental: "twoją drużyną",
+            locative: "twojej drużynie",
+            vocative: "twoja drużyno"
+        },
+        playerTeam: leader => <PolishDeclension>{
+            nominative: `drużyna ${leader}`,
+            genitive: `drużyny ${leader}`,
+            dative: `drużynie ${leader}`,
+            accusative: `drużynę ${leader}`,
+            instrumental: `drużyną ${leader}`,
+            locative: `drużynie ${leader}`,
+            vocative: `drużyno ${leader}`,
+        },
+        enemyTeam: <PolishDeclension>{
+            nominative: "przeciwnicy",
+            genitive: "przeciwników",
+            dative: "przeciwnikom",
+            accusative: "przeciwników",
+            instrumental: "przeciwnikami",
+            locative: "przeciwnikach",
+            vocative: "przeciwnicy",
+        },
+
+        // Indicators
+        ready: "Gotowy",
+        target: "Cel",
 
     },
     areas: {
@@ -161,7 +203,7 @@ const polish: Language = {
         // Wild forest
         // They all have the same kind of declension. Perhaps this could be shortened with some function.
         rabbit: <PolishDeclension>{
-            nominative: "zając",
+            nominative: "Zając",
             genitive: "zająca",
             dative: "zającowi",
             accusative: "zająca",
@@ -170,7 +212,7 @@ const polish: Language = {
             vocative: "zającu"
         },
         boar: <PolishDeclension>{
-            nominative: "dzik",
+            nominative: "Dzik",
             genitive: "dzika",
             dative: "dzikowi",
             accusative: "dzika",
@@ -179,7 +221,7 @@ const polish: Language = {
             vocative: "dziku"
         },
         deer: <PolishDeclension>{
-            nominative: "jeleń",
+            nominative: "Jeleń",
             genitive: "jelenia",
             dative: "jeleniowi",
             accusative: "jelenia",
@@ -188,7 +230,7 @@ const polish: Language = {
             vocative: "jeleniu",
         },
         wolf: <PolishDeclension>{
-            nominative: "wilk",
+            nominative: "Wilk",
             genitive: "wilka",
             dative: "wilkowi",
             accusative: "wilka",
