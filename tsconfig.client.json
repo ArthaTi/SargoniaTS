@@ -4,7 +4,8 @@
         "target": "es5",
         "module": "none",
         "outFile": "res/js/index.js",
-        "rootDir": "src/client"
+        "rootDir": "src/client",
+        "mapRoot": "/mnt/Data/Git/SargoniaTS",
     },
     "include": [
         "src/client"

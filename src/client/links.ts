@@ -1,17 +1,38 @@
-function makeLink(parent: JQuery, link: Common.ActionLink) {
+/// <reference path="../../out/Common/ActionResponse.d.ts" />
+
+/**
+ * @param $parent The parent item, or if `update` was provided, the item to update.
+ * @param link Data about the item received from the API.
+ * @param update If true, update the `$parent` with the data instead of adding the link to it.
+ */
+function makeLink($parent: JQuery, link: Common.ActionLink, update = false) {
 
     let $item;
 
     // Given a link
-    if (link.url) {
+    if (link.url && (!update || $parent.prop("tagName") !== "A")) {
 
         // Create the link
         $item = $("<a>").attr("href", link.url);
 
-    } else {
+    }
+
+    // Given a text item
+    else if (!update || $parent?.prop("tagName") !== "SPAN") {
 
         // Create as a normal span otherwise
         $item = $("<span>");
+
+    }
+
+    // Item didn't change its type
+    else {
+
+        // Just use the previous
+        $item = $parent;
+
+        // Clear all classes
+        $item.removeAttr("class");
 
     }
 
@@ -19,13 +40,24 @@ function makeLink(parent: JQuery, link: Common.ActionLink) {
     if (link.inline) $item.addClass("inline");
     if (link.header) $item.addClass("header");
 
-    return $item
+    // Add text to the item
+    $item.text(link.text);
 
-        // Add text
-        .text(link.text)
+    // Used a new item
+    if (!update) {
 
         // Append to parent
-        .appendTo(parent);
+        $item.appendTo($parent);
+
+    }
+
+    // Replaced an existing item
+    else if ($parent !== $item) {
+
+        // Replace it in DOM
+        $parent.replaceWith($item);
+
+    }
 
 }
 

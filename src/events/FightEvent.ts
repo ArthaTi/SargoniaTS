@@ -1,9 +1,9 @@
 import Event from "./Event";
 import Language, { PersonInflection } from "../languages/Language";
-import Fight from "../Fight";
+import Fight from "../fight/Fight";
 import Context from "../Context";
 import { CharacterContext } from "../checks";
-import Fighter from "../Fighter";
+import Fighter from "../fight/Fighter";
 
 /**
  * Event representing a fight. FightEvent isn't standalone and requires a parent event to keep track of the fight.
@@ -18,11 +18,6 @@ export default class FightEvent extends Event {
 
     // Disable leaving
     leave = undefined;
-
-    /**
-     * Fighters ready to start.
-     */
-    ready = new Set<Fighter>();
 
     /**
      * Current target of the player.
@@ -121,12 +116,12 @@ export default class FightEvent extends Event {
 
             // Show count of ready players
             context.text += context.language.fight.readyCount(
-                this.ready.size,
+                this.fight.ready.size,
                 this.fight.teams.reduce<number>((count, team) => count + team.length, 0)
             ) + "\n";
 
             // Add a toggle readiness button
-            options.push(!this.ready.has(context.user.currentCharacter)
+            options.push(!this.fight.ready.has(context.user.currentCharacter)
 
                 // Ready
                 ? {
@@ -226,16 +221,19 @@ export default class FightEvent extends Event {
 
                     text: (
 
+                        // If they're targetted, add an indicator arrow
+                        (this.target === member ? "» " : "")
+
                         // Add their name
-                        typeof member.name === "string"
+                        + (typeof member.name === "string"
                             ? member.name
-                            : member.name(context.language).nominative)
+                            : member.name(context.language).nominative))
 
                         // Add level indicator
                         + ` (${context.language.general.levelAbbr} ${member.level})`
 
                         // If the fight hasn't started yet, add indicator whether they are ready or not
-                        + (!this.fight.started && this.ready.has(member)
+                        + (!this.fight.started && this.fight.ready.has(member)
                             ? " – " + context.language.fight.ready
                             : ""
                         ),
@@ -258,7 +256,7 @@ export default class FightEvent extends Event {
     markReady(context: CharacterContext, set = true) {
 
         // Add or remove the character
-        this.ready[set ? "add" : "delete"](context.user.currentCharacter);
+        this.fight.ready[set ? "add" : "delete"](context.user.currentCharacter);
 
     }
 

@@ -1,7 +1,10 @@
-import { Attributes, Abilities, AttributePoints, AbilityPoints, Stats } from "./Stats";
-import { randomRange } from "./utils";
+import { Attributes, Abilities, AttributePoints, AbilityPoints, Stats } from "../Stats";
+import { randomRange } from "../utils";
 import Fighter from "./Fighter";
-import Language, { Declension } from "./languages/Language";
+import Language, { Declension } from "../languages/Language";
+import Intelligence, { NewIntelligence } from "../intelligence/Intelligence";
+import OnlyAttack from "../intelligence/OnlyAttack";
+import Fight from "./Fight";
 
 export abstract class InputEnemy {
 
@@ -14,6 +17,11 @@ export abstract class InputEnemy {
      * Level range of the enemy
      */
     levelRange!: [number, number];
+
+    /**
+     * Intelligence type of the enemy
+     */
+    intelligence?: NewIntelligence;
 
     /**
      * Attributes of the enemy.
@@ -46,6 +54,9 @@ export default class Enemy extends InputEnemy implements Fighter {
 
     // Add the level of the enemy
     level: number;
+
+    // Intelligence of the enemy
+    intelligence: NewIntelligence = OnlyAttack;
 
     // General attributes
     generalAttributes: Attributes;

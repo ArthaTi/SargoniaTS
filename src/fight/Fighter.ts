@@ -1,5 +1,6 @@
-import { Attributes, Abilities } from "./Stats";
-import Language, { Declension } from "./languages/Language";
+import { Attributes, Abilities } from "../Stats";
+import Language, { Declension } from "../languages/Language";
+import Intelligence, { NewIntelligence } from "../intelligence/Intelligence";
 
 export default interface Fighter {
 
@@ -12,6 +13,16 @@ export default interface Fighter {
      * Level of the fighter.
      */
     level: number;
+
+    /**
+     * Intelligence class of the fighter.
+     */
+    intelligence: NewIntelligence;
+
+    /**
+     * Current intelligence of the fighter, managed by the `Fight` object.
+     */
+    currentIntelligence?: Intelligence;
 
     /**
      * General (max) attributes of the fighter.

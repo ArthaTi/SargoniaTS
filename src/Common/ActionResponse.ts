@@ -3,6 +3,11 @@ namespace Common {
     export interface ActionLink {
 
         /**
+         * ID of the link, used to change it without updating everything else
+         */
+        id?: string,
+
+        /**
          * Text of the link.
          */
         text: string;

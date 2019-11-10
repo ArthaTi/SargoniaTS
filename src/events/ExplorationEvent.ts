@@ -5,11 +5,11 @@ import Context from "../Context";
 import { CharacterContext } from "../checks";
 import areas from "../data/areas";
 import { randomRange } from "../utils";
-import Enemy, { InputEnemy } from "../Enemy";
-import Fight from "../Fight";
+import Enemy, { InputEnemy } from "../fight/Enemy";
+import Fight from "../fight/Fight";
 import FightEvent from "./FightEvent";
 import { InternalRedirect } from "../exceptions";
-import Team from "../Team";
+import Team from "../fight/Team";
 
 export default class ExplorationEvent extends Event {
 

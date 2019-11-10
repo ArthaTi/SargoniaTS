@@ -10,6 +10,7 @@ export default class Context implements Common.Api {
     text: string = "";
     inputs?: Common.ActionInput[];
     actions: (Common.ActionLink | Common.ActionLink[])[][] = [];
+    updateActions?: (Common.ActionLink & { id: string })[] = [];
     error?: string;
     character?: Common.Api["character"];
     progress: number = 0;

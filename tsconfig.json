@@ -1,11 +1,14 @@
 {
     "compilerOptions": {
-        "experimentalDecorators": true,
-        "target": "es5",
-        "sourceMap": true,
+        "target": "ES2015",
+        "module": "commonjs",
         "outDir": "out",
-        "strict": true,
-        "esModuleInterop": true,
+        "rootDir": "src",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "sourceMap": true
     },
-    "exclude": ["out/"]
+    "exclude": [
+        "out/",
+    ]
 }

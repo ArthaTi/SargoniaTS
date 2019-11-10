@@ -38,6 +38,13 @@ namespace Common {
         actions?: (ActionLink[] | ActionLink)[][];
 
         /**
+         * Update existing actions by IDs.
+         *
+         * This is mutually exclusive to `actions`, other actions should remain unchanged if this is provided.
+         */
+        updateActions?: (ActionLink & { id: string })[];
+
+        /**
          * If it's a non-empty string, an error message should be displayed.
          */
         error?: string;

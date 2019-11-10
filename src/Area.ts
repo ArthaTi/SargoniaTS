@@ -1,5 +1,5 @@
 import Language, { Declension } from "./languages/Language";
-import { InputEnemy } from "./Enemy";
+import { InputEnemy } from "./fight/Enemy";
 
 export abstract class InputArea {
 

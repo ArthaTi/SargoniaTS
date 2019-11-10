@@ -1,5 +1,5 @@
 import Language from "../languages/Language";
-import Enemy from "../Enemy";
+import Enemy from "../fight/Enemy";
 import { Attributes, Abilities } from "../Stats";
 
 export const rabbit = new Enemy({

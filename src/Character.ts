@@ -1,12 +1,12 @@
-import Fight from "./Fight";
 import BaseEntity from "./BaseEntity";
 import { Entity, Column, ManyToOne } from "typeorm";
 import User from "./User";
 import requirement from "./Validator";
 import Event from "./events/Event";
 import { AttributePoints, AbilityPoints, Attributes, Abilities } from "./Stats";
-import Fighter from "./Fighter";
-import Team from "./Team";
+import Fighter from "./fight/Fighter";
+import Team from "./fight/Team";
+import HumanIntel from "./intelligence/Human";
 
 @Entity()
 export default class Character extends BaseEntity implements Fighter {
@@ -59,9 +59,9 @@ export default class Character extends BaseEntity implements Fighter {
     event?: Event;
 
     /**
-     * Current fight data.
+     * Player's intelligence
      */
-    fight?: Fight;
+    intelligence = HumanIntel;
 
     /**
      * Team of the player.
