@@ -49,4 +49,42 @@ export default class Fight {
 
     }
 
+    *fighters() {
+
+        // For each team
+        for (let team of this.teams) {
+
+            yield* team;
+
+        }
+
+    }
+
+    /**
+     * Check if all players are ready and start the fight if so.
+     */
+    start() {
+
+        // Ignore if the fight has already started
+        if (this.started) return;
+
+        // Count fighters
+        let count = this.teams.reduce<number>((value, now) => value + now.length, 0);
+
+        // If all of them are ready
+        if (count !== this.ready.size) return;
+
+        // Start the fight
+        this.started = true;
+
+        // Announce this to all fighters
+        for (let fighter of this.fighters()) {
+
+            // Tell each the fight started
+            fighter.currentIntelligence!.started();
+
+        }
+
+    }
+
 }

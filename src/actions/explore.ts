@@ -27,25 +27,21 @@ actions["explore"] = actions["exploration"] = checkContext(exclusiveEvent(Explor
         else if (action === "leave") {
 
             // Ask for confirmation
-            context.text = context.language.general.confirmLeaving(context.language.exploration.declension) + "\n";
+            context.text = context.language.general.confirmStopping(event.status(context.language)) + "\n";
 
             // Add options
-            context.actions = [
-
-                [
-                    {
-                        text: context.language.simple.no,
-                        url: "/explore",
-                        inline: true,
-                    },
-                    {
-                        text: context.language.simple.leave,
-                        url: "/explore/" + event.addAction("leave:ok"),
-                        inline: true,
-                    }
-                ]
-
-            ];
+            context.actions.push([
+                {
+                    text: context.language.simple.no,
+                    url: "/explore",
+                    inline: true,
+                },
+                {
+                    text: context.language.simple.stop,
+                    url: "/explore/" + event.addAction("leave:ok"),
+                    inline: true,
+                }
+            ]);
 
         }
 

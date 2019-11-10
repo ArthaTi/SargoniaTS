@@ -21,20 +21,41 @@ export default interface Language {
         notFound: string,
 
         /**
-         * A confirmation for leaving.
+         * A confirmation for stopping an action.
          */
-        confirmLeaving: (what: Declension) => string,
+        confirmStopping: (what: DeclensionInflection) => string,
 
-    }
+        /**
+         * Shown when the player attempts stopping an action they cannot. For example, a fight cannot be simply left,
+         * as there are many too different ways to end it.
+         */
+        cannotStop: (what: DeclensionInflection) => string,
+
+    };
 
     /**
      * Some basic, simple words used for buttons. Should start with an uppercase letter.
      */
     simple: {
-        leave: string,
+
         yes: string,
         no: string,
-    }
+
+        /**
+         * Stop doing what you are doing now.
+         */
+        stop: string,
+
+        /**
+         * Instantly end/finish what you are doing now.
+         */
+        endItNow: string,
+
+        /**
+         * Return to something.
+         */
+        return: string,
+    };
 
     /**
      * All language texts related to characters.
@@ -106,7 +127,7 @@ export default interface Language {
          */
         levelUp: string,
 
-    }
+    };
 
     /**
      * All things exploration
@@ -116,12 +137,12 @@ export default interface Language {
         /**
          * Declension of the word "exploration"
          */
-        declension: Declension,
+        declension: DeclensionInflection,
 
         /**
-         * Person inflection of the word.
+         * Declension of the word "exploration", while exploring something
          */
-        inflection: (what: Declension) => PersonInflection,
+        explorationOf: (what: Declension) => DeclensionInflection,
 
         /**
          * Title for the exploration as a verb, used for example to link it on the main page.
@@ -181,8 +202,7 @@ export default interface Language {
      */
     fight: {
 
-        declension: Declension;
-        inflection: PersonInflection;
+        declension: DeclensionInflection;
 
         /**
          * Count of ready players. Two arguments are supplied, one is the amount of players ready, the other
@@ -258,27 +278,23 @@ export default interface Language {
      *
      * @param what The thing the character is doing. For example, "exploring a dungeon".
      */
-    busy: (what: PersonInflection) => string,
-
-    /**
-     * Leave the current event, eg. stop the current exploration.
-     */
-    leave: (what: PersonInflection) => string,
+    busy: (what: DeclensionInflection) => string,
 
     /**
      * Continue the current event.
      */
-    return: (what: PersonInflection) => string,
+    return: (what: DeclensionInflection) => string,
 
 }
 
 export type Dynamic<T = string> = (what: T) => string;
 
 /**
- * Declension of a word. Feel free to only use those necessary. If the language doesn't have declension, you can just
- * use the "nominative" property.
+ * Declension of a word. Feel free to only use those necessary. If the language doesn't have declensions, you can just
+ * provide the "nominative" property.
  */
 export type Declension<T = string> = {
+
     nominative: T,
     accusative?: T,
     genitive?: T,
@@ -286,13 +302,15 @@ export type Declension<T = string> = {
     vocative?: T,
     locative?: T,
     instrumental?: T,
-    [other: string]: T | undefined,
+    [other: string]: T | undefined | { [t: string]: T },
+
 };
 
 /**
- * Person inflection for the word.
+ * Declension of a word and inflection of its verb form. If the language doesn't have declensions or inflections, you
+ * can just provide the "nominative" and "impersonal" properties respectively.
  */
-export type PersonInflection<T = string> = {
+export type DeclensionInflection<T = string> = Declension & {
 
     singular?: {
 
@@ -301,7 +319,7 @@ export type PersonInflection<T = string> = {
         third: T,
         [other: string]: T,
 
-    }
+    };
 
     plural?: {
 
@@ -310,8 +328,8 @@ export type PersonInflection<T = string> = {
         third: T,
         [other: string]: T,
 
-    }
+    };
 
-    impersonal: T
+    impersonal: T;
 
 };

@@ -73,13 +73,34 @@ type Constructor<T> = new (...a: any[]) => T;
 /**
  * This function checks whether a character is assigned and whether if they're participating in a different kind
  * of event. It will allow characters with no events assigned though
+ *
+ * @param redirect Redirect to the primary event instead of giving a stop/return prompt.
  */
-export function exclusiveEvent<T extends Event>(context: Context, event: Constructor<T>): context is ExclusiveContext<T>;
-export function exclusiveEvent<T extends Event>(event: Constructor<T>): (context: Context) => context is ExclusiveContext<T>;
-export function exclusiveEvent<T extends Event>(context: Context | Constructor<T>, event?: Constructor<T>) {
+export function exclusiveEvent<T extends Event>(context: Context, event: Constructor<T>, redirect?: boolean):
+    context is ExclusiveContext<T>;
+export function exclusiveEvent<T extends Event>(event: Constructor<T>, redirect?: boolean):
+    (context: Context) => context is ExclusiveContext<T>;
+export function exclusiveEvent<T extends Event>(context: Context | Constructor<T>, event?: Constructor<T> | boolean,
+    redirect = false) {
 
-    // Get the event
-    event = event || <Constructor<T>>context;
+    // Supplied the redirect, 1-2 argument signature
+    if (typeof event === "boolean") {
+
+        // The event is actually the redirect
+        redirect = event;
+
+        // The context is actually the event
+        event = <Constructor<T>>context;
+
+    }
+
+    // Other signatures
+    else {
+
+        // Get the event
+        event = event || <Constructor<T>>context;
+
+    }
 
     // Create the function
     const f = (context: Context) => {
@@ -89,7 +110,7 @@ export function exclusiveEvent<T extends Event>(context: Context | Constructor<T
         let currentEvent = context.user!.currentCharacter!.event;
 
         // No event assigned
-        if (context.user!.currentCharacter!.event === undefined) {
+        if (currentEvent === undefined) {
 
             // Pass the test
             return true;
@@ -104,23 +125,31 @@ export function exclusiveEvent<T extends Event>(context: Context | Constructor<T
 
         }
 
+        // Requested a redirect instead
+        if (redirect) {
+
+            throw new InternalRedirect("/" + currentEvent.primaryAction, context);
+
+        }
+
         // Show an error
-        context.error = context.language.busy(currentEvent!.status(context.language));
+        context.error = context.language.busy(currentEvent.status(context.language));
 
         // Add actions
         let actions: Common.ActionLink[] = [];
         context.actions.push(actions);
 
         // Get the status
-        let status = currentEvent!.status(context.language);
+        let status = currentEvent.status(context.language);
 
         // An option to quit the event
-        if (currentEvent!.leave) {
+        if (currentEvent.leave) {
 
             // Add an option with a link to quit the event
             actions.push({
 
-                text: context.language.leave(status),
+                text: context.language.simple.endItNow,
+                url: "/stop/then/" + context.url[0]
 
             });
 
@@ -130,7 +159,7 @@ export function exclusiveEvent<T extends Event>(context: Context | Constructor<T
         actions.push({
 
             text: context.language.return(status),
-            url: "/" + currentEvent?.primaryAction,
+            url: "/" + currentEvent.primaryAction,
 
         });
 

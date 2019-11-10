@@ -39,7 +39,7 @@ export default class ExplorationEvent extends Event {
     constructor(public area: Area) {
 
         super();
-        this.status = (lang: Language) => lang.exploration.inflection(area.name(lang));
+        this.status = (lang: Language) => lang.exploration.explorationOf(area.name(lang));
 
     }
 
@@ -98,7 +98,7 @@ export default class ExplorationEvent extends Event {
 
     status(lang: Language) {
 
-        return lang.exploration.inflection(this.area.name(lang));
+        return lang.exploration.explorationOf(this.area.name(lang));
 
     }
 
@@ -129,18 +129,18 @@ export default class ExplorationEvent extends Event {
             }
 
             // Show actions
-            context.actions = [
-                [
-                    {
-                        text: context.language.exploration.continue,
-                        url: "/explore/" + this.addAction("continue"),
-                    },
-                    {
-                        text: context.language.exploration.end,
-                        url: "/explore/" + this.addAction("leave"),
-                    }
-                ]
-            ];
+            context.actions.push([
+
+                {
+                    text: context.language.exploration.continue,
+                    url: "/explore/" + this.addAction("continue"),
+                },
+                {
+                    text: context.language.exploration.end,
+                    url: "/explore/" + this.addAction("leave"),
+                }
+
+            ]);
 
             // Restore context
             super.fillContext(context);
@@ -204,7 +204,7 @@ export default class ExplorationEvent extends Event {
                 let groupP = this.area.enemies[randomRange(this.area.enemies.length)];
 
                 /** Chosen group of enemies */
-                let group: InputEnemy[] & { count?: [number, number] } = groupP instanceof Array ? groupP : [groupP];
+                let group: InputEnemy[] & { count?: [number, number]; } = groupP instanceof Array ? groupP : [groupP];
 
                 // Get the opponent count
                 let count = group.count || [1, 3];

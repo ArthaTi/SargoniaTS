@@ -3,7 +3,7 @@ import checkContext, { exclusiveEvent } from "../checks";
 import FightEvent from "../events/FightEvent";
 import { InternalRedirect } from "../exceptions";
 
-actions["fight"] = checkContext(exclusiveEvent(FightEvent), context => {
+actions["fight"] = checkContext(exclusiveEvent(FightEvent, true), context => {
 
     // No one's fighting there
     if (!context.user.currentCharacter.event) {
@@ -23,6 +23,9 @@ actions["fight"] = checkContext(exclusiveEvent(FightEvent), context => {
 
         // Mark as ready
         event.markReady(context, context.url[2] !== "no");
+
+        // Attempt to start the fight
+        event.fight.start();
 
     }
 

@@ -1,4 +1,4 @@
-import Language, { PersonInflection } from "../languages/Language";
+import Language, { DeclensionInflection } from "../languages/Language";
 import * as crypto from "crypto";
 import { CharacterContext } from "../checks";
 
@@ -27,7 +27,7 @@ export default abstract class Event {
     /**
      * Status text of the playing player.
      */
-    abstract status(context: Language): PersonInflection;
+    abstract status(language: Language): DeclensionInflection;
 
     /**
      * Fill general data, such as the title and progress of the current event.

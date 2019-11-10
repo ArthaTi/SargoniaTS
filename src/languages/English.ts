@@ -7,13 +7,16 @@ const english: Language = {
         notFound: "The page couldn't be found",
         level: "Level",
         levelAbbr: "lvl",
-        confirmLeaving: what => `Are you sure you want to leave the ${what.nominative}?`,
+        confirmStopping: what => `Are you sure you want to stop ${what.impersonal}?`,
+        cannotStop: what => `You cannot stop ${what.impersonal}!`
     },
     simple: {
 
-        leave: "Leave",
         yes: "Yes",
         no: "No",
+        stop: "Stop",
+        endItNow: "End it now",
+        return: "Return",
 
     },
     character: {
@@ -44,14 +47,16 @@ const english: Language = {
 
         declension: {
             nominative: "exploration",
+            impersonal: "exploring",
         },
-        inflection: what => ({
+        explorationOf: what => ({
             impersonal: `exploring ${what.nominative}`,
             singular: {
                 first: `explore ${what.nominative}`,
                 second: `explore ${what.nominative}`,
                 third: `explores ${what.nominative}`,
-            }
+            },
+            nominative: `exploration of ${what.nominative}`,
         }),
 
         // Titles
@@ -79,14 +84,12 @@ const english: Language = {
 
         declension: {
             nominative: "fight",
-        },
-        inflection: {
             impersonal: "fighting",
             singular: {
                 first: "fight",
                 second: "fight",
                 third: "fights"
-            }
+            },
         },
 
         readyCount: (n, outOf) => `${n} out of ${outOf} fighters are ready.`,
@@ -122,7 +125,6 @@ const english: Language = {
 
     },
     busy: doing => `You are currently busy ${doing.impersonal}. End doing it to continue here.`,
-    leave: doing => `Stop ${doing.impersonal}`,
     return: doing => `Continue ${doing.impersonal}`
 
 };

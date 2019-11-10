@@ -1,5 +1,5 @@
 import Event from "./Event";
-import Language, { PersonInflection } from "../languages/Language";
+import Language, { DeclensionInflection } from "../languages/Language";
 import Fight from "../fight/Fight";
 import Context from "../Context";
 import { CharacterContext } from "../checks";
@@ -30,9 +30,9 @@ export default class FightEvent extends Event {
 
     }
 
-    status(context: Language): PersonInflection {
+    status(context: Language): DeclensionInflection {
 
-        return context.fight.inflection;
+        return context.fight.declension;
 
     }
 

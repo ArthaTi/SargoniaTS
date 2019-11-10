@@ -20,10 +20,10 @@ actions[""] = context => {
 
     }
 
-    // Other actions
-    context.actions = [
+    // List actions
+    context.actions.push(
 
-        // General events
+        // General actions
         [
 
             {
@@ -33,6 +33,6 @@ actions[""] = context => {
 
         ]
 
-    ];
+    );
 
 };

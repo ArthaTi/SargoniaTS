@@ -78,15 +78,14 @@ export default async function run(action: string, context: Context) {
             // An internal redirect for the API
             if (e instanceof InternalRedirect && context.type === "json") {
 
+                // Reset the context
+                context.reset(e.target);
+
                 // Add a redirect to the context
                 context.redirect = e.target;
 
-                // Load the URL address
-                let segments = e.target.split("/").filter(a => a);
-                context.url = segments;
-
                 // Request the action
-                await run(segments[0], context);
+                await run(context.url[0], context);
 
                 // Stop – don't rethrow
                 return;
@@ -151,10 +150,8 @@ const res = __dirname + "/../res";
         catch (error) {
 
             // Create the context
-            // TODO: Rewrite this into an object, not an interface. Would make stuff easier.
-            let context = new Context({
+            let context = new Context(request.url!, {
 
-                url: request.url!.split("/").filter(v => v),
                 method: request.method,
                 text: "",
                 user: await Session.restore(request.headers["cookie"]),

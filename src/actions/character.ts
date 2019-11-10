@@ -75,11 +75,11 @@ actions["character"] = actions["characters"] = checkContext(requireLogin, async 
     else if (context.url[1] === "select") {
 
         context.title = context.language.character.select;
-        context.actions = [
+        context.actions.push([
 
-            [{ text: context.language.character.create, url: "/character/new" }],
+            { text: context.language.character.create, url: "/character/new" }
 
-        ];
+        ]);
 
     }
 

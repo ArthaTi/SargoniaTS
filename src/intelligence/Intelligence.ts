@@ -7,9 +7,6 @@ import Fight from "../fight/Fight";
  * - In case of players, it will communicate them with the fight events.
  * - In case of common enemies, this will control their decisions.
  * - In case of summons, this will control their decisions and follow their master's instructions.
- *
- * Note how entities summoned during the fight will have their `constructor`, `started` and `round` methods called
- * instantly, in order.
  */
 export default abstract class Intelligence {
 
@@ -21,7 +18,9 @@ export default abstract class Intelligence {
     constructor(public fighter: Fighter, public fight: Fight) { }
 
     /**
-     * Called once the fight starts. This will also be called if the fighter was created after the fight has started.
+     * Called once the fight starts.
+     *
+     * This won't be called if the fighter was created after the fight has started.
      */
     started() { }
 
