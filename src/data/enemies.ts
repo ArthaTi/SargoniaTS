@@ -1,8 +1,8 @@
 import Language from "../languages/Language";
-import Enemy from "../fight/Enemy";
+import Enemy, { InputEnemy } from "../fight/Enemy";
 import { Attributes, Abilities } from "../Stats";
 
-export const rabbit = new Enemy({
+export const rabbit = <InputEnemy>{
 
     name: (lang: Language) => lang.enemies.rabbit,
     levelRange: [1, 2],
@@ -29,9 +29,9 @@ export const rabbit = new Enemy({
         charisma: 1,
     }),
 
-});
+};
 
-export const boar = new Enemy({
+export const boar = <InputEnemy>{
 
     name: (lang: Language) => lang.enemies.boar,
     levelRange: [2, 4],
@@ -59,9 +59,9 @@ export const boar = new Enemy({
         charisma: 1,
     }),
 
-});
+};
 
-export const deer = new Enemy({
+export const deer = <InputEnemy>{
 
     name: (lang: Language) => lang.enemies.deer,
     levelRange: [3, 5],
@@ -90,9 +90,9 @@ export const deer = new Enemy({
         charisma: 1,
     })
 
-});
+};
 
-export const wolf = new Enemy({
+export const wolf = <InputEnemy>{
 
     name: (lang: Language) => lang.enemies.wolf,
     levelRange: [4, 6],
@@ -121,6 +121,6 @@ export const wolf = new Enemy({
         charisma: 1,
     })
 
-});
+};
 
 export default <{ [name: string]: Enemy; }>module.exports;

@@ -223,8 +223,11 @@ export default class ExplorationEvent extends Event {
                 // Repeat if there is less enemies than required, or on a 1/3 chance unless reached the limit
                 while (enemies.length < count[0] || enemies.length < count[1] && !randomRange(3));
 
+                // Get the character
+                let character = context.user.currentCharacter;
+
                 // Create the fight
-                let fight = new Fight([context.user.currentCharacter.team, enemies]);
+                let fight = new Fight(character.team.split(character), enemies);
 
                 // Create and start the event
                 context.user.currentCharacter.event = new FightEvent(this, fight);

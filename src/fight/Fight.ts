@@ -24,25 +24,26 @@ export default class Fight {
      */
     readonly teams = new ArrayProxy<Team>();
 
-    constructor(teams: Iterable<Team>) {
+    constructor(...teams: Team[]) {
 
         // When a new team is added to the fight
-        this.teams.onAdded.push(team =>
+        this.teams.onAdded.push(team => {
 
-            // For each member
-            team.forEach(member => {
+            // Assign the fight
+            team.fight = this;
 
-                // If they're already in this fight, ignore them (someone else left it)
-                if (member.currentIntelligence?.fight === this) return;
+            /*
+             * onRemove is never bound – Since fights are assigned to the entire team, an individual member leaving
+             * the fight will also leave their team. Since everyone in all participating teams is considered
+             * participating in the fight itself, leaving a team will mean their intelligence will simply be frozen,
+             * as the Fight will forget about the presence of the fighter.
+             *
+             * It is possible to implement child teams. Members will all be assigned to a "master team", and in case
+             * a fight starts, a child team will be created with only the participating team members in it. When
+             * the fight ends, the master team is restored to all fighters. See Team.parent for info on implementation.
+             */
 
-                // Assign the intelligence
-                member.currentIntelligence = new member.intelligence(member, this);
-
-            })
-        );
-
-        // onRemove is never bound – it could only be called if they or someone else left the battle. There is no need
-        // for action then. In case where the fight ends, every member can be called individually without this.
+        });
 
         // Add all the teams to the list
         this.teams.push(...teams);

@@ -1,5 +1,6 @@
 import Fighter from "../fight/Fighter";
 import Fight from "../fight/Fight";
+import Team from "../fight/Team";
 
 /**
  * Represents the "will" of a fighter.
@@ -15,7 +16,12 @@ export default abstract class Intelligence {
      *
      * This might happen before or after a fight starts, make sure to mark the fighter as ready.
      */
-    constructor(public fighter: Fighter, public fight: Fight) { }
+    constructor(public fighter: Fighter, public team: Team, public fight: Fight) { this.joined(); }
+
+    /**
+     * Called instantly in the constructor to make it simpler to extend this class.
+     */
+    abstract joined(): void;
 
     /**
      * Called once the fight starts.
@@ -45,4 +51,4 @@ export default abstract class Intelligence {
 
 }
 
-export type NewIntelligence = new (fighter: Fighter, fight: Fight) => Intelligence;
+export type NewIntelligence = new (fighter: Fighter, team: Team, fight: Fight) => Intelligence;
