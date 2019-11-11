@@ -31,7 +31,9 @@ export default class ArrayProxy<T> extends Array<T> {
                 target[property] = value;
 
                 // Ignore non-numeric items
-                if (typeof property !== "number") return true;
+                // Note that despite being typed as "number", it's still a string when it's used as a key for
+                // an object.
+                if (isNaN(parseInt(<string>property))) return true;
 
                 // If there was a fighter in this position
                 if (prev) {

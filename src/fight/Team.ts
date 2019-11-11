@@ -2,7 +2,6 @@ import Fighter from "./Fighter";
 import Language, { Declension } from "../languages/Language";
 import ArrayProxy from "../ArrayProxy";
 import Fight from "./Fight";
-import Character from "../Character";
 
 export default class Team extends ArrayProxy<Fighter> {
 
@@ -18,7 +17,7 @@ export default class Team extends ArrayProxy<Fighter> {
         this._fight = value;
 
         // Summon the intelligence for all members
-        this.forEach(this.spawnIntelligence);
+        this.forEach(figher => this.spawnIntelligence(figher));
 
     }
 
@@ -32,7 +31,9 @@ export default class Team extends ArrayProxy<Fighter> {
     constructor(public name: (lang: Language) => Declension, ...members: Fighter[]) {
 
         super(...members);
-        this.onAdded.push(this.spawnIntelligence);
+        this.onAdded.push(fighter => this.spawnIntelligence(fighter));
+
+        return this;
 
     }
 
