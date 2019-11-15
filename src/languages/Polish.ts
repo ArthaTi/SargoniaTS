@@ -219,9 +219,90 @@ const polish: Language = {
             vocative: "przeciwnicy",
         }),
 
+        // Turns
+        turn: (who: PolishDeclension) => declension({
+            nominative: `tura ${who.genitive}`,
+            genitive: `tury ${who.genitive}`,
+            dative: `turze ${who.genitive}`,
+            accusative: `turę ${who.genitive}`,
+            instrumental: `turą ${who.genitive}`,
+            locative: `turze ${who.genitive}`,
+            vocative: `turo ${who.genitive}`,
+        }),
+        yourTurn: declension({
+            nominative: "twoja tura",
+            genitive: "twojej tury",
+            dative: "twojej turze",
+            accusative: "twoją turę",
+            instrumental: "twoją turą",
+            locative: "twojej turze",
+            vocative: "twoja turo",
+        }),
+
         // Indicators
         ready: "Gotowy",
         target: "Cel",
+
+    },
+    grants: {
+
+        attack: declension({
+
+            nominative: "Atak",
+            genitive: "ataku",
+            dative: "atakowi",
+            accusative: "atak",
+            instrumental: "atakiem",
+            locative: "ataku",
+            vocative: "ataku",
+
+        }),
+        skill: declension({
+
+            nominative: "Umiejętność",
+            genitive: "umiejętności",
+            dative: "umiejętności",
+            accusative: "umiejętność",
+            instrumental: "umiejętnością",
+            locative: "umiejętności",
+            vocative: "umiejętności",
+
+        }),
+        spell: declension({
+
+            nominative: "Zaklęcie",
+            genitive: "zaklęcia",
+            dative: "zaklęciu",
+            accusative: "zaklęcie",
+            instrumental: "zaklęciem",
+            locative: "zaklęciu",
+            vocative: "zaklęcie",
+
+        }),
+        passive: declension({
+
+            nominative: "Pasywny efekt",
+            genitive: "pasywnego efektu",
+            dative: "pasywnemu efektowi",
+            accusative: "pasywny efekt",
+            instrumental: "pasywnym efektem",
+            locative: "pasywnym efekcie",
+            vocative: "pasywny efekcie",
+
+        }),
+
+    },
+    weapons: {
+
+        oldBow: declension({
+            nominative: "Stary łuk",
+            genitive: "starego łuku",
+            dative: "staremu łukowi",
+            accusative: "stary łuk",
+            instrumental: "starym łukiem",
+            locative: "starym łuku",
+            vocative: "stary łuku"
+        })
 
     },
     areas: {

@@ -44,4 +44,9 @@ export default interface Fighter {
      */
     tempAbilities: Abilities;
 
+    /**
+     * EP amount of the fighter.
+     */
+    ep?: number;
+
 }

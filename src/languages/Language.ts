@@ -250,6 +250,16 @@ export default interface Language {
          */
         target: string,
 
+        /**
+         * Your turn
+         */
+        yourTurn: Declension,
+
+        /**
+         * Someone's turn.
+         */
+        turn: (who: Declension) => Declension,
+
     },
 
     /**
@@ -272,6 +282,28 @@ export default interface Language {
         wolf: Declension,
 
     },
+
+    /**
+     * Grant names and types
+     */
+    grants: {
+
+        // Grant types
+        attack: Declension;
+        skill: Declension;
+        spell: Declension;
+        passive: Declension;
+
+    };
+
+    /**
+     * All weapons in the game.
+     */
+    weapons: {
+
+        oldBow: Declension,
+
+    };
 
     /**
      * The character is already busy with something else.
@@ -302,7 +334,7 @@ export type Declension<T = string> = {
     vocative?: T,
     locative?: T,
     instrumental?: T,
-    [other: string]: T | undefined | { [t: string]: T },
+    [other: string]: T | undefined | { [t: string]: T; },
 
 };
 
@@ -333,3 +365,15 @@ export type DeclensionInflection<T = string> = Declension & {
     impersonal: T;
 
 };
+
+export function languageProxy(word: string): Declension {
+
+    return new Proxy(<Declension>{}, {
+        get() {
+
+            return word;
+
+        }
+    });
+
+}

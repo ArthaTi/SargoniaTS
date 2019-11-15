@@ -5,19 +5,31 @@ import ArrayProxy from "../ArrayProxy";
 export default class Fight {
 
     /**
-     * Whether the fight started or not
+     * Whether the fight started or not.
      */
     started = false;
 
     /**
-     * Who has the current turn
+     * Index of the current fighter in the fight order.
      */
-    turn?: Fighter;
+    turn?: number;
+
+    /**
+     * EP treshold for the fight. Determined when the fight starts.
+     *
+     * Note: Summons don't count for the treshold.
+     */
+    epTreshold?: number;
+
+    /**
+     * Turn order of the fight. Determined when the fight starts.
+     */
+    readonly order: Fighter[] = [];
 
     /**
      * Fighters ready to start.
      */
-    ready = new Set<Fighter>();
+    readonly ready = new Set<Fighter>();
 
     /**
      * Teams participating in the fight.
@@ -75,16 +87,83 @@ export default class Fight {
         // If all of them are ready
         if (count !== this.ready.size) return;
 
+        // Determine turn order
+        this.order.push(
+
+            // Create an array of fighters
+            ...[...this.fighters()]
+
+                // Sort in descending order
+                .sort((a, b) => b.tempAttributes.stamina - a.tempAttributes.stamina)
+
+        );
+
+        // Count the treshold
+        this.epTreshold = this.order.reduce((value, fighter) => value + fighter.tempAttributes.stamina, 0);
+
         // Start the fight
         this.started = true;
 
-        // Announce this to all fighters
+        // Announce to all fighters
         for (let fighter of this.fighters()) {
 
-            // Tell each the fight started
+            // Tell them the fight started
             fighter.currentIntelligence!.started();
 
         }
+
+        this.nextTurn();
+
+    }
+
+    /**
+     * Start the new round. Automatically invoked by `nextTurn`.
+     */
+    private nextRound() {
+
+        // Reset turn count
+        this.turn = 0;
+
+        // Give EP to all fighters
+        for (let fighter of this.order) {
+
+            // Set EP to 0 if the fighter just entered the fight
+            if (!fighter.ep) fighter.ep = 0;
+
+            // Assign to their stamina
+            fighter.ep += fighter.tempAttributes.stamina;
+
+        }
+
+        // Return the character to move
+        return this.order[this.turn];
+
+    }
+
+    /**
+     * Start the next turn.
+     */
+    nextTurn() {
+
+        let fighter = this.order[this.turn!];
+
+        // If the fighter has reached the EP treshold
+        if (fighter?.ep && fighter.ep! > this.epTreshold!) {
+
+            // Reduce their EP
+            fighter.ep! -= this.epTreshold!;
+
+        } else {
+
+            // Switch fighter
+            fighter = this.turn && this.order[++this.turn] || this.nextRound();
+
+        }
+
+        // Notify them of their turn
+        fighter.currentIntelligence!.turn();
+
+        return this.order[this.turn!];
 
     }
 

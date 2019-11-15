@@ -1,5 +1,5 @@
 import Event from "./Event";
-import Language, { DeclensionInflection } from "../languages/Language";
+import Language, { DeclensionInflection, languageProxy } from "../languages/Language";
 import Fight from "../fight/Fight";
 import Context from "../Context";
 import { CharacterContext } from "../checks";
@@ -48,7 +48,7 @@ export default class FightEvent extends Event {
         if (context.actions.length || context.user.currentCharacter.event !== this) return;
 
         /** List of options */
-        let options: Common.ActionLink[] = [];
+        const options: Common.ActionLink[] = [];
 
         // List teams
         this.listTeams(context);
@@ -146,8 +146,10 @@ export default class FightEvent extends Event {
         // The fight has started
         else {
 
+            let fighter = this.fight.order[this.fight.turn!];
+
             // The players's turn
-            if (this.fight.turn === context.user.currentCharacter) {
+            if (fighter === context.user.currentCharacter) {
 
                 context.text = "Fight started *";
 
@@ -156,12 +158,33 @@ export default class FightEvent extends Event {
             // Somebody else's turn
             else {
 
-                // Add a disabled action showing the state of the fight
-                options = [
+                // Add text showing the state of the fight
+                options.push(
                     {
+
+                        // Turn owner
+                        text: context.language.fight.turn(
+
+                            // A static name (no declension)
+                            typeof fighter.name === "string"
+
+                                // Put it in a proxy
+                                ? languageProxy(fighter.name)
+
+                                // Otherwise just get the name
+                                : fighter.name(context.language)
+
+                        ).nominative,
+
+                        // Header for the turn
+                        header: true,
+
+                    },
+                    {
+                        // "Wait for your turn"
                         text: context.language.fight.wait,
-                    }
-                ];
+                    },
+                );
 
             }
 

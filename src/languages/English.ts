@@ -104,6 +104,10 @@ const english: Language = {
         playerTeam: leader => ({ nominative: `${leader}'s team` }),
         enemyTeam: { nominative: "enemy team" },
 
+        // Turns
+        turn: who => ({ nominative: `${who.nominative}'s turn` }),
+        yourTurn: { nominative: "your turn" },
+
         // Other texts
         ready: "Ready",
         target: "Target"
@@ -123,6 +127,17 @@ const english: Language = {
         deer: { nominative: "Deer" },
         wolf: { nominative: "Wolf" },
 
+    },
+    grants: {
+
+        attack: { nominative: "attack" },
+        spell: { nominative: "spell" },
+        skill: { nominative: "skill" },
+        passive: { nominative: "passive effect" },
+
+    },
+    weapons: {
+        oldBow: { nominative: "Old bow" }
     },
     busy: doing => `You are currently busy ${doing.impersonal}. End doing it to continue here.`,
     return: doing => `Continue ${doing.impersonal}`
