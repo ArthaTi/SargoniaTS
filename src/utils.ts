@@ -124,14 +124,94 @@ export function escapeHTML(str: string) {
  *
  * Source: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random#Examples
  */
+export function randomRange(range: [number, number] | Range): number;
 export function randomRange(min: number, max: number): number;
 export function randomRange(max: number): number;
-export function randomRange(min: number, max?: number) {
-    if (max === undefined) {
+export function randomRange(min: number | [number, number] | Range, max?: number) {
+
+    // Given an array
+    if (min instanceof Array) {
+
+        // Store in the parameters (Note: `= min` won't work!)
+        [min, max] = [min[0], min[1]];
+
+    }
+
+    // Maximum range not given
+    else if (max === undefined) {
         max = min - 1;
         min = 0;
     }
+
+    // Round the values
     min = Math.ceil(min);
     max = Math.floor(max);
+
+    // Get the value
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * Get first yielded element of the iterator.
+ */
+export function getFirst<T>(iterator: IterableIterator<T>, filter?: (item: T) => boolean): T | undefined {
+
+    // Iterate on the iterator
+    for (let item of iterator) {
+
+        // Filter
+        if (!filter?.(item)) continue;
+
+        // Return the item
+        return item;
+
+    }
+
+}
+
+export class Range extends Array<number> {
+
+    length!: 2;
+    0: number;
+    1: number;
+
+    constructor(min: number, max?: number) {
+
+        // Maximum range not given
+        if (max === undefined) {
+
+            // Make it [0-min) range instead
+            max = min - 1;
+            min = 0;
+
+        }
+
+        super(min, max);
+
+    }
+
+    toString() {
+
+        // Get the range
+        let min = Math.ceil(this[0]);
+        let max = Math.floor(this[1]);
+
+        // A constant value, convert to string
+        if (min === max) return min.toString();
+
+        // Two values, get the range
+        return `${min}-${max}`;
+
+    }
+
+    *[Symbol.iterator]() {
+
+        for (let i = this[0]; i < this[1]; i++) {
+
+            yield i;
+
+        }
+
+    }
+
 }

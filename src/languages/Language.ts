@@ -1,7 +1,7 @@
 /**
  * Language of the game.
  */
-export default interface Language {
+export default interface Language<D extends Declension = Declension, I extends Inflection = Inflection> {
 
     /**
      * General names and abbreviations. Everything should be lowercase.
@@ -23,13 +23,13 @@ export default interface Language {
         /**
          * A confirmation for stopping an action.
          */
-        confirmStopping: (what: DeclensionInflection) => string,
+        confirmStopping: (what: D & I) => string,
 
         /**
          * Shown when the player attempts stopping an action they cannot. For example, a fight cannot be simply left,
          * as there are many too different ways to end it.
          */
-        cannotStop: (what: DeclensionInflection) => string,
+        cannotStop: (what: D & I) => string,
 
     };
 
@@ -92,6 +92,12 @@ export default interface Language {
          */
         mana: string,
 
+        strength: string,
+        intelligence: string,
+        dexterity: string,
+        perception: string,
+        charisma: string,
+
         /**
          * Error message shown when the character name is already in use.
          */
@@ -137,12 +143,12 @@ export default interface Language {
         /**
          * Declension of the word "exploration"
          */
-        declension: DeclensionInflection,
+        declension: D & I,
 
         /**
          * Declension of the word "exploration", while exploring something
          */
-        explorationOf: (what: Declension) => DeclensionInflection,
+        explorationOf: (what: D) => D & I,
 
         /**
          * Title for the exploration as a verb, used for example to link it on the main page.
@@ -173,7 +179,7 @@ export default interface Language {
          * List of stuff the player gained. Something along the lines: `You gained ${what}`.
          * @param what List of items as a single string.
          */
-        gained: (what: Declension) => string,
+        gained: (what: D) => string,
 
         /**
          * Button to start another exploration after ending one.
@@ -202,7 +208,7 @@ export default interface Language {
      */
     fight: {
 
-        declension: DeclensionInflection;
+        declension: D & I;
 
         /**
          * Count of ready players. Two arguments are supplied, one is the amount of players ready, the other
@@ -228,17 +234,17 @@ export default interface Language {
         /**
          * Title of the player's current team.
          */
-        yourTeam: Declension,
+        yourTeam: D,
 
         /**
          * Title of other player's team.
          */
-        playerTeam: (leader: string) => Declension,
+        playerTeam: (leader: string) => D,
 
         /**
          * Title of enemy's team
          */
-        enemyTeam: Declension,
+        enemyTeam: D,
 
         /**
          * Text indicating that a certain player is ready.
@@ -253,12 +259,22 @@ export default interface Language {
         /**
          * Your turn
          */
-        yourTurn: Declension,
+        yourTurn: D,
 
         /**
          * Someone's turn.
          */
-        turn: (who: Declension) => Declension,
+        turn: (who: D) => D,
+
+        /**
+         * You did something (eg. You drank a potion, you took 10 damage).
+         */
+        youDidSomething: (what: I) => string,
+
+        /**
+         * Someone did something (eg. Player drank a potion, Player took 10 damage).
+         */
+        didSomething: (who: D, what: I) => string,
 
     },
 
@@ -267,7 +283,7 @@ export default interface Language {
      */
     areas: {
 
-        wildForest: Declension,
+        wildForest: D,
 
     },
 
@@ -276,10 +292,10 @@ export default interface Language {
      */
     enemies: {
 
-        rabbit: Declension,
-        boar: Declension,
-        deer: Declension,
-        wolf: Declension,
+        rabbit: D,
+        boar: D,
+        deer: D,
+        wolf: D,
 
     },
 
@@ -289,10 +305,45 @@ export default interface Language {
     grants: {
 
         // Grant types
-        attack: Declension;
-        skill: Declension;
-        spell: Declension;
-        passive: Declension;
+        attack: D;
+        skill: D;
+        spell: D;
+        passive: D;
+
+    };
+
+    /**
+     * Information about each effect of a grant shown on item cards.
+     */
+    effects: {
+
+        /**
+         * Get a list of given verbs.
+         *
+         * For example, "Took 5 damage, got poisoned and bleeds."
+         */
+        mix: (verb: string[]) => string,
+
+        /**
+         * - Noun: Label for damage in item cards, for example "5 damage".
+         * - Verb: Taking damage, for example "took 5 damage".
+         *
+         * @param amount Damage range or number, for example `4` or `3-5`
+         */
+        damage: (amount: string) => D & I,
+
+    };
+
+    /**
+     * Attack types. Please provide verbs in past form.
+     */
+    attacks: {
+
+        punch: D,
+        punchSomeone: (target: D) => I,
+
+        bite: D,
+        biteSomeone: (target: D) => I,
 
     };
 
@@ -301,7 +352,7 @@ export default interface Language {
      */
     weapons: {
 
-        oldBow: Declension,
+        oldBow: D,
 
     };
 
@@ -310,16 +361,20 @@ export default interface Language {
      *
      * @param what The thing the character is doing. For example, "exploring a dungeon".
      */
-    busy: (what: DeclensionInflection) => string,
+    busy: (what: D & I) => string,
 
     /**
      * Continue the current event.
      */
-    return: (what: DeclensionInflection) => string,
+    return: (what: D & I) => string,
 
 }
 
-export type Dynamic<T = string> = (what: T) => string;
+export type Dynamic<Type, Value> = {
+    [key in keyof Type]: Type[key] extends object
+    ? Dynamic<Type[key], Value>
+    : Value
+};
 
 /**
  * Declension of a word. Feel free to only use those necessary. If the language doesn't have declensions, you can just
@@ -327,6 +382,7 @@ export type Dynamic<T = string> = (what: T) => string;
  */
 export type Declension<T = string> = {
 
+    /** Primary form of the word */
     nominative: T,
     accusative?: T,
     genitive?: T,
@@ -334,7 +390,6 @@ export type Declension<T = string> = {
     vocative?: T,
     locative?: T,
     instrumental?: T,
-    [other: string]: T | undefined | { [t: string]: T; },
 
 };
 
@@ -342,7 +397,7 @@ export type Declension<T = string> = {
  * Declension of a word and inflection of its verb form. If the language doesn't have declensions or inflections, you
  * can just provide the "nominative" and "impersonal" properties respectively.
  */
-export type DeclensionInflection<T = string> = Declension & {
+export type Inflection<T = string> = {
 
     singular?: {
 
@@ -366,7 +421,11 @@ export type DeclensionInflection<T = string> = Declension & {
 
 };
 
-export function languageProxy(word: string): Declension {
+export function languageProxy(word: string): Declension;
+export function languageProxy(word: string | ((language: Language) => Declension), language: Language): Declension;
+export function languageProxy(word: string | ((language: Language) => Declension), language?: Language): Declension {
+
+    if (word instanceof Function) return word(language!);
 
     return new Proxy(<Declension>{}, {
         get() {
@@ -375,5 +434,17 @@ export function languageProxy(word: string): Declension {
 
         }
     });
+
+}
+
+/**
+ * Join an array with `separator`, except for the last occurrence – with `end`
+ */
+export function joinEnd(array: string[], separator: string, end: string) {
+
+    return [
+        ...array.slice(0, -2),
+        array.slice(-2).join(end)
+    ].join(separator);
 
 }

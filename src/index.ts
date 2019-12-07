@@ -11,7 +11,8 @@ import Character from "./Character";
 import "reflect-metadata";
 import Session from "./Session";
 import polish from "./languages/Polish";
-import { CharacterContext } from "./checks";
+import { CharacterContext, ExclusiveContext } from "./checks";
+import Item from "./items/Item";
 
 type Listener = (context: Context) => void | Promise<any>;
 
@@ -281,7 +282,7 @@ const res = __dirname + "/../res";
                 if (character.event && character.event.primaryAction === context.url[0]) {
 
                     // Fill the context
-                    character.event.fillContext(<CharacterContext>context);
+                    character.event.fillContext(<ExclusiveContext<any>>context);
 
                 }
 
@@ -347,7 +348,7 @@ glob(__dirname + "/actions/*.js", async (_error, matches) => {
         username: "sargonia",
         password: "db8175",
         database: "sargonia",
-        entities: [User, Character, Session],
+        entities: [User, Character, Session, Item],
         synchronize: true
 
     });

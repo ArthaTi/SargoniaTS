@@ -50,3 +50,13 @@ export default interface Fighter {
     ep?: number;
 
 }
+
+export default abstract class Fighter {
+
+    static isAlive(fighter: Fighter) {
+
+        return fighter.tempAttributes.health > 0 && fighter.tempAttributes.stamina > 0;
+
+    }
+
+}

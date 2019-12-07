@@ -44,7 +44,7 @@ export default class Context implements Common.Api {
     /**
      * Language of the game.
      */
-    language: Language = polish;
+    language: Language = polish as any;
 
     constructor(url: string, partial?: Partial<Context>) {
 

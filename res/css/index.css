@@ -278,33 +278,48 @@
     /* Each section */
     #actions > div {
 
-        /* Resize to children */
-        display: table;
+        display: flex;
 
         /* Add a margin above and below, center within the parent */
         margin: 1em auto;
 
         /* Align children to center */
         text-align: center;
+        justify-content: center;
 
     }
 
-    /* Rows */
-    #actions .row {
+    /* Columns */
+    #actions .column {
 
-        /* View each row as a cell */
-        display: table-cell;
+        /* Add some margin */
+        margin: 0 10px;
 
     }
 
     /* Each action */
-    #actions span, #actions a {
+    #actions span:not(.progress-fill), #actions a {
 
         /* Display as a block */
         display: block;
 
         /* Add margin */
-        margin: 5px 20px;
+        padding: 5px 10px;
+
+        /* Proper sizing */
+        box-sizing: border-box;
+
+        /* Prevent hiding when there's no text */
+        min-height: 1em;
+
+    }
+
+    /* .progress-bar actions */
+    #actions .progress-bar {
+
+        /* Add some margin */
+        margin: 10px 0;
+
     }
 
     /* .inline actions */
@@ -314,7 +329,7 @@
         display: inline-block;
 
         /* Some margin */
-        margin: 5px 10px;
+        padding: 5px 10px;
 
     }
 
@@ -338,7 +353,7 @@
         position: relative;
 
         /* A grey border at the bottom */
-        border-bottom: 4px solid #fff1;
+        border-bottom: 4px solid #5554;
 
         /* Fill width, no padding on the sides */
         width: 100%;

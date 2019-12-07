@@ -27,6 +27,11 @@ namespace Common {
          */
         header?: boolean,
 
+        /**
+         * Display a progress bar, for example showing health of a fighter.
+         */
+        progress?: number
+
     }
 
     export interface ActionInput {

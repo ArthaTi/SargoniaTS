@@ -2,8 +2,9 @@ import { actions } from "..";
 import checkContext, { exclusiveEvent } from "../checks";
 import FightEvent from "../events/FightEvent";
 import { InternalRedirect } from "../exceptions";
+import Grant from "../items/Grant";
 
-actions["fight"] = checkContext(exclusiveEvent(FightEvent, true), context => {
+actions["fight"] = checkContext(exclusiveEvent(FightEvent, true), async context => {
 
     // No one's fighting there
     if (!context.user.currentCharacter.event) {
@@ -12,10 +13,9 @@ actions["fight"] = checkContext(exclusiveEvent(FightEvent, true), context => {
 
     }
 
-    // Get the event
-    let event = context.user.currentCharacter.event;
-
-    // Get the action
+    // Get the data
+    let character = context.user.currentCharacter;
+    let event = character.event!;
     let action = event.getAction(context.url[1]);
 
     // Mark as ready
@@ -25,7 +25,7 @@ actions["fight"] = checkContext(exclusiveEvent(FightEvent, true), context => {
         event.markReady(context, context.url[2] !== "no");
 
         // Attempt to start the fight
-        event.fight.start();
+        await event.fight.start();
 
     }
 
@@ -42,6 +42,40 @@ actions["fight"] = checkContext(exclusiveEvent(FightEvent, true), context => {
 
         // Change the target
         event.target = event.fight.teams[indexes[0]]?.[indexes[1]];
+
+    }
+
+    // Use a grant
+    if (action === "use") {
+
+        // Convert to number
+        let grant = parseInt(context.url[2]);
+
+        // Check if the player has the grant
+        if (grant in character.inventory.grantCounts) {
+
+            // No target chosen
+            if (!event.target) {
+
+                // TODO: Show an error
+                return;
+
+            }
+
+            // Use it
+            Grant.map[grant].apply(character, event.target);
+
+            // End turn
+            await event.fight.nextTurn();
+
+        }
+
+        // Show an error
+        else {
+
+            // TODO
+
+        }
 
     }
 

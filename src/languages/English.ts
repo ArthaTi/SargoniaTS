@@ -1,6 +1,6 @@
-import Language from "./Language";
+import Language, { Declension, Inflection, joinEnd } from "./Language";
 
-const english: Language = {
+const english: Language<Declension, EnglishInflection> = {
 
     general: {
 
@@ -34,6 +34,13 @@ const english: Language = {
         stamina: "Stamina",
         mana: "Mana",
 
+        // Abilities
+        strength: "Strength",
+        intelligence: "Intelligence",
+        dexterity: "Dexterity",
+        perception: "Perception",
+        charisma: "Charisma",
+
         // Errors
         duplicateName: "A character with this name already exists.",
         unnamed: "Please name your character to create it.",
@@ -48,14 +55,13 @@ const english: Language = {
         declension: {
             nominative: "exploration",
             impersonal: "exploring",
+            first: "explore",
+            third: "explores"
         },
         explorationOf: what => ({
             impersonal: `exploring ${what.nominative}`,
-            singular: {
-                first: `explore ${what.nominative}`,
-                second: `explore ${what.nominative}`,
-                third: `explores ${what.nominative}`,
-            },
+            first: `explore ${what.nominative}`,
+            third: `explores ${what.nominative}`,
             nominative: `exploration of ${what.nominative}`,
         }),
 
@@ -85,11 +91,8 @@ const english: Language = {
         declension: {
             nominative: "fight",
             impersonal: "fighting",
-            singular: {
-                first: "fight",
-                second: "fight",
-                third: "fights"
-            },
+            first: "fight",
+            third: "fights"
         },
 
         readyCount: (n, outOf) => `${n} out of ${outOf} fighters are ready.`,
@@ -108,9 +111,13 @@ const english: Language = {
         turn: who => ({ nominative: `${who.nominative}'s turn` }),
         yourTurn: { nominative: "your turn" },
 
+        // Actions
+        didSomething: (who, what) => `${who.nominative} ${what.third}.`,
+        youDidSomething: (what) => `You ${what.first}.`,
+
         // Other texts
         ready: "Ready",
-        target: "Target"
+        target: "Target",
 
     },
     areas: {
@@ -136,11 +143,62 @@ const english: Language = {
         passive: { nominative: "passive effect" },
 
     },
+    effects: {
+
+        // Misc
+        mix: verbs => joinEnd(verbs, ", ", " and "),
+
+        // Effects
+        damage: amount => ({
+
+            nominative: `${amount} damage`,
+            impersonal: `taking ${amount} damage`,
+            first: `take ${amount} damage`,
+            third: `takes ${amount} damage`,
+
+        }),
+
+    },
+    attacks: {
+
+        punch: {
+            nominative: "Punch"
+        },
+        punchSomeone: target => ({
+
+            impersonal: `punching ${target.nominative}`,
+            first: `punched ${target.nominative}`,
+            third: `punched ${target.nominative}`,
+
+        }),
+
+        bite: {
+            nominative: "Bite",
+        },
+        biteSomeone: target => ({
+
+            impersonal: `biting ${target.nominative}`,
+            first: `bit ${target.nominative}`,
+            third: `bit ${target.nominative}`,
+
+        }),
+
+    },
     weapons: {
+
         oldBow: { nominative: "Old bow" }
+
     },
     busy: doing => `You are currently busy ${doing.impersonal}. End doing it to continue here.`,
     return: doing => `Continue ${doing.impersonal}`
 
 };
 export default english;
+
+type EnglishInflection<T = string> = Inflection & {
+
+    impersonal: T
+    first: T,
+    third: T,
+
+};

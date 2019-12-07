@@ -37,11 +37,37 @@ function makeLink($parent: JQuery, link: Common.ActionLink, update = false) {
     }
 
     // Add classes
-    if (link.inline) $item.addClass("inline");
-    if (link.header) $item.addClass("header");
+    $item.toggleClass("inline", !!link.inline);
+    $item.toggleClass("header", !!link.header);
+    $item.toggleClass("progress-bar", link.progress !== undefined);
 
     // Add text to the item
     $item.text(link.text);
+
+    // Add progress bar
+    if (link.progress !== undefined) {
+
+        let $progress = $item.find(".progress-fill");
+
+        // Didn't find the item
+        if (!$progress.length) {
+
+            // Add it
+            $progress = $("<span>").addClass("progress-fill").appendTo($item);
+
+        }
+
+        // Set width
+        $progress.css("width", link.progress * 100 + "%");
+
+    }
+
+    // Remove the progress bar
+    else {
+
+        $item.find(".progress-fill").remove();
+
+    }
 
     // Used a new item
     if (!update) {

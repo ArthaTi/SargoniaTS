@@ -50,7 +50,7 @@ function displayData(data: Common.Api) {
         let $text = $("#text").text(data.text || "");
 
         // Add linebreaks to it
-        $text.html($text.html().replace("\n", "<br />"));
+        $text.html($text.html().replace(/\n/g, "<br />"));
 
         // Fade in
         if (data.text) $text.fadeIn(250);
@@ -136,9 +136,9 @@ function displayData(data: Common.Api) {
                 // Item is an array
                 if (item instanceof Array) {
 
-                    // Create the row div
+                    // Create the column div
                     let $row = $("<div />")
-                        .addClass("row")
+                        .addClass("column")
                         .appendTo($div);
 
                     // Map each link and wrap in a div

@@ -1,5 +1,7 @@
 export default class ArrayProxy<T> extends Array<T> {
 
+    protected thisProxy: this;
+
     /**
      * All functions inside will be called when a new fighter is added to the team.
      */
@@ -20,7 +22,7 @@ export default class ArrayProxy<T> extends Array<T> {
         super(...items);
 
         // Create the array
-        return new Proxy(this, {
+        return this.thisProxy = new Proxy(this, {
 
             set: (target, property: keyof T[], value: any) => {
 

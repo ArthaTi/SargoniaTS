@@ -1,16 +1,13 @@
 import Event from "./Event";
-import Language, { DeclensionInflection, languageProxy } from "../languages/Language";
+import Language, { languageProxy, Inflection, Declension } from "../languages/Language";
 import Fight from "../fight/Fight";
-import Context from "../Context";
-import { CharacterContext } from "../checks";
+import { CharacterContext, ExclusiveContext } from "../checks";
 import Fighter from "../fight/Fighter";
 
 /**
  * Event representing a fight. FightEvent isn't standalone and requires a parent event to keep track of the fight.
  * Once the fight ends, the parent event will be set as the character's current event. The parent event can also bind
  * events to respond to certain actions in the fight.
- *
- * @todo
  */
 export default class FightEvent extends Event {
 
@@ -30,7 +27,7 @@ export default class FightEvent extends Event {
 
     }
 
-    status(context: Language): DeclensionInflection {
+    status(context: Language): Declension & Inflection {
 
         return context.fight.declension;
 
@@ -39,7 +36,7 @@ export default class FightEvent extends Event {
     /**
      * Note: Doesn't call `super()` – implements context restoration itself as a log of actions.
      */
-    fillContext(context: CharacterContext) {
+    fillContext(context: ExclusiveContext<this>) {
 
         // Fill parent context
         this.parentEvent.fillContext(context);
@@ -48,15 +45,14 @@ export default class FightEvent extends Event {
         if (context.actions.length || context.user.currentCharacter.event !== this) return;
 
         /** List of options */
+        const responses: Common.ActionLink[][] = [];
         const options: Common.ActionLink[] = [];
 
         // List teams
         this.listTeams(context);
 
-        // Add responses
+        // Add targets and push options
         {
-
-            let responses: Common.ActionLink[][] = [];
 
             // Targetting a certain fighter
             if (this.target) {
@@ -81,6 +77,9 @@ export default class FightEvent extends Event {
                     {
                         text: context.language.general.level + " " + this.target.level,
                     },
+                    {
+                        text: "",
+                    },
 
                     // Target's attributes
                     {
@@ -97,7 +96,32 @@ export default class FightEvent extends Event {
                         // Mana
                         text: context.language.character.mana + ": "
                             + this.target.tempAttributes.mana + "/" + this.target.generalAttributes.mana,
-                    }
+                    },
+                    {
+                        text: "",
+                    },
+
+                    // Target's abilities
+                    {
+                        text: context.language.character.strength + ": "
+                            + this.target.tempAbilities.strength,
+                    },
+                    {
+                        text: context.language.character.intelligence + ": "
+                            + this.target.tempAbilities.intelligence,
+                    },
+                    {
+                        text: context.language.character.dexterity + ": "
+                            + this.target.tempAbilities.dexterity,
+                    },
+                    {
+                        text: context.language.character.perception + ": "
+                            + this.target.tempAbilities.perception,
+                    },
+                    {
+                        text: context.language.character.charisma + ": "
+                            + this.target.tempAbilities.charisma,
+                    },
 
                 ]);
 
@@ -148,10 +172,82 @@ export default class FightEvent extends Event {
 
             let fighter = this.fight.order[this.fight.turn!];
 
+            // Display fight log
+            for (let action of this.fight.log) {
+
+                // Push action initiator
+                context.text += context.language.fight.didSomething(
+
+                    // Get the caster
+                    languageProxy(action.caster.name, context.language),
+
+                    // Get the grant description
+                    action.grant.description(context.language, languageProxy(action.target.name, context.language))
+
+                ) + "\n";
+
+                // Add results of the action
+                for (let [fighter, results] of action.results.entries()) {
+
+                    const mix: <T extends any>(objects: T[]) => T = objects => {
+
+                        let obj: any = objects[0];
+                        let result: any = {};
+
+                        // Iterate on keys
+                        for (let key in obj) {
+
+                            // Object
+                            if (typeof obj[key] === "object") {
+
+                                // Call recursively
+                                result[key] = mix(objects.map(obj => obj[key]));
+
+                            }
+
+                            // String
+                            else if (typeof obj[key] === "string") {
+
+                                // Get the key
+                                result[key] = context.language.effects.mix(objects.map(obj => obj[key]));
+
+                            }
+
+                        }
+
+                        return result;
+
+                    };
+
+                    let arr: Inflection[] = [];
+
+                    // Get the arguments
+                    for (let arg in results) {
+
+                        let result = results[arg]!;
+
+                        // Humanize everything
+                        arr.push(result.effect.result(context.language, result));
+
+                    }
+
+                    // Add to text
+                    context.text += context.language.fight.didSomething(
+
+                        languageProxy(fighter.name, context.language),
+                        mix(arr),
+
+                    ) + "\n";
+
+                }
+
+            }
+
             // The players's turn
             if (fighter === context.user.currentCharacter) {
 
-                context.text = "Fight started *";
+                // View grants
+                responses.push(...context.user.currentCharacter.inventory.displayGrants(context));
 
             }
 
@@ -262,6 +358,7 @@ export default class FightEvent extends Event {
                         ),
 
                     url: `/fight/${target}/${indexes[0]}/${indexes[1]}`,
+                    progress: member.tempAttributes.health / member.generalAttributes.health,
 
                 });
 

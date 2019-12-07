@@ -47,7 +47,7 @@ export default abstract class Intelligence {
     /**
      * This will be called whenever this entity has their turn.
      */
-    abstract turn(): void;
+    abstract async turn(): Promise<void>;
 
 }
 

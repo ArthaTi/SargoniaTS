@@ -1,6 +1,7 @@
 import Team from "./Team";
 import Fighter from "./Fighter";
 import ArrayProxy from "../ArrayProxy";
+import Result from "./Result";
 
 export default class Fight {
 
@@ -8,6 +9,13 @@ export default class Fight {
      * Whether the fight started or not.
      */
     started = false;
+
+    /**
+     * Current round number, starting from 0.
+     *
+     * This will be -1 if the fight didn't start yet
+     */
+    round: number = -1;
 
     /**
      * Index of the current fighter in the fight order.
@@ -20,6 +28,11 @@ export default class Fight {
      * Note: Summons don't count for the treshold.
      */
     epTreshold?: number;
+
+    /**
+     * Log of all actions
+     */
+    log: Result[] = [];
 
     /**
      * Turn order of the fight. Determined when the fight starts.
@@ -67,6 +80,37 @@ export default class Fight {
         // For each team
         for (let team of this.teams) {
 
+            // Yield its members
+            yield* team;
+
+        }
+
+    }
+
+    *alive() {
+
+        // For each fighter
+        for (let fighter of this.fighters()) {
+
+            // Skip dead fighters
+            if (!Fighter.isAlive(fighter)) continue;
+
+            // Yield other fighters
+            yield fighter;
+
+        }
+
+    }
+
+    *enemies(ofTeam: Team) {
+
+        // For each team
+        for (let team of this.teams) {
+
+            // Ignore current team
+            if (team === ofTeam) continue;
+
+            // Yield others
             yield* team;
 
         }
@@ -76,7 +120,7 @@ export default class Fight {
     /**
      * Check if all players are ready and start the fight if so.
      */
-    start() {
+    async start() {
 
         // Ignore if the fight has already started
         if (this.started) return;
@@ -112,7 +156,8 @@ export default class Fight {
 
         }
 
-        this.nextTurn();
+        // Run AI moves
+        await this.nextTurn();
 
     }
 
@@ -120,6 +165,9 @@ export default class Fight {
      * Start the new round. Automatically invoked by `nextTurn`.
      */
     private nextRound() {
+
+        // Count rounds
+        this.round++;
 
         // Reset turn count
         this.turn = 0;
@@ -142,10 +190,20 @@ export default class Fight {
 
     /**
      * Start the next turn.
+     *
+     * The promise will resolve when a fighter doesn't immediately do their turn, for example if they're a player.
      */
-    nextTurn() {
+    nextTurn(): Promise<Fighter> {
 
         let fighter = this.order[this.turn!];
+
+        // Once the first round (and a single turn after it) passed
+        if (this.round >= 1) {
+
+            // Start clearing the log
+            this.log.shift();
+
+        }
 
         // If the fighter has reached the EP treshold
         if (fighter?.ep && fighter.ep! > this.epTreshold!) {
@@ -156,14 +214,29 @@ export default class Fight {
         } else {
 
             // Switch fighter
-            fighter = this.turn && this.order[++this.turn] || this.nextRound();
+            fighter = this.turn !== undefined && this.order[++this.turn] || this.nextRound();
 
         }
 
-        // Notify them of their turn
-        fighter.currentIntelligence!.turn();
+        // Return a promise
+        return new Promise(resolve =>
 
-        return this.order[this.turn!];
+            // Notify them of their turn when the stack is cleared
+            setTimeout(() => fighter.currentIntelligence!.turn()
+
+                // Resolve when a fighter doesn't immediately end their turn
+                .then(() => resolve(this.order[this.turn!]))
+
+            )
+
+        );
+
+        /*
+         * This starts a recursion loop which ends as soon as an entity doesn't end their turn in the same call stack.
+         *
+         * If not the `setTimeout`, the code could frequently hit call stack limit on long fights, because this
+         * function indirectly calls itself.
+         */
 
     }
 

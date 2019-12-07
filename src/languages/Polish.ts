@@ -1,43 +1,8 @@
-import Language, { Declension, DeclensionInflection } from "./Language";
+import Language, { Declension, Inflection, joinEnd } from "./Language";
 
-type PolishDeclension<T = string> = Declension & {
+// TODO: add a female inflection for singular third person
 
-    /** 1\. Mianownik (kto, co) */
-    nominative: T,
-
-    /** 2\. Dopełniacz (kogo, czego) */
-    genitive?: T,
-
-    /** 3\. Celownik (komu, czemu) */
-    dative?: T,
-
-    /** 4\. Biernik (kogo, co) */
-    accusative?: T,
-
-    /** 5\. Narzędnik (z kim, z czym) */
-    instrumental?: T,
-
-    /** 6\. Miejscownik (o kim, o czym) */
-    locative?: T,
-
-    /** 7\. Wołacz */
-    vocative?: T,
-
-};
-
-function declension(word: PolishDeclension): Declension {
-
-    return word;
-
-}
-
-function inflection(word: PolishDeclension & DeclensionInflection): DeclensionInflection {
-
-    return word;
-
-}
-
-const polish: Language = {
+const polish: Language<PolishDeclension, Required<Inflection>> = {
 
     general: {
 
@@ -72,6 +37,13 @@ const polish: Language = {
         stamina: "Wytrzymałość",
         mana: "Mana",
 
+        // Abilities
+        strength: "Siła",
+        intelligence: "Inteligencja",
+        dexterity: "Zwinność",
+        perception: "Percepcja",
+        charisma: "Charyzma",
+
         // Errors
         duplicateName: "Ta nazwa postaci jest już zajęta.",
         unnamed: "Nadaj swojej postaci imię, by ją utworzyć.",
@@ -83,7 +55,7 @@ const polish: Language = {
     },
     exploration: {
 
-        declension: inflection({
+        declension: {
 
             nominative: "eksploracja",
             genitive: "eksploracji",
@@ -105,8 +77,8 @@ const polish: Language = {
                 third: "eksplorują",
             }
 
-        }),
-        explorationOf: (area: PolishDeclension<string>) => inflection({
+        },
+        explorationOf: (area: PolishDeclension<string>) => ({
 
             nominative: `eksploracja ${area.genitive}`,
             genitive: `eksploracji ${area.genitive}`,
@@ -161,7 +133,7 @@ const polish: Language = {
     },
     fight: {
 
-        declension: inflection({
+        declension: {
             nominative: "walka",
             genitive: "walki",
             dative: "walce",
@@ -181,7 +153,7 @@ const polish: Language = {
                 second: "walczycie",
                 third: "walczą",
             }
-        }),
+        },
 
         readyCount: (n, outOf) => `${n} z ${outOf} walczących jest gotowych.`,
 
@@ -191,7 +163,7 @@ const polish: Language = {
         unready: "Chwila, nie jestem gotowy!",
 
         // Teams
-        yourTeam: declension({
+        yourTeam: {
             nominative: "twoja drużyna",
             genitive: "twojej drużyny",
             dative: "twojej drużynie",
@@ -199,8 +171,8 @@ const polish: Language = {
             instrumental: "twoją drużyną",
             locative: "twojej drużynie",
             vocative: "twoja drużyno"
-        }),
-        playerTeam: leader => declension({
+        },
+        playerTeam: leader => ({
             nominative: `drużyna ${leader}`,
             genitive: `drużyny ${leader}`,
             dative: `drużynie ${leader}`,
@@ -209,7 +181,7 @@ const polish: Language = {
             locative: `drużynie ${leader}`,
             vocative: `drużyno ${leader}`,
         }),
-        enemyTeam: declension({
+        enemyTeam: {
             nominative: "przeciwnicy",
             genitive: "przeciwników",
             dative: "przeciwnikom",
@@ -217,10 +189,10 @@ const polish: Language = {
             instrumental: "przeciwnikami",
             locative: "przeciwnikach",
             vocative: "przeciwnicy",
-        }),
+        },
 
         // Turns
-        turn: (who: PolishDeclension) => declension({
+        turn: (who: PolishDeclension) => ({
             nominative: `tura ${who.genitive}`,
             genitive: `tury ${who.genitive}`,
             dative: `turze ${who.genitive}`,
@@ -229,7 +201,7 @@ const polish: Language = {
             locative: `turze ${who.genitive}`,
             vocative: `turo ${who.genitive}`,
         }),
-        yourTurn: declension({
+        yourTurn: {
             nominative: "twoja tura",
             genitive: "twojej tury",
             dative: "twojej turze",
@@ -237,7 +209,11 @@ const polish: Language = {
             instrumental: "twoją turą",
             locative: "twojej turze",
             vocative: "twoja turo",
-        }),
+        },
+
+        // Actions
+        didSomething: (who, what) => `${who.nominative} ${what.singular.third}.`,
+        youDidSomething: (what) => `${what.singular.second}.`,
 
         // Indicators
         ready: "Gotowy",
@@ -246,7 +222,7 @@ const polish: Language = {
     },
     grants: {
 
-        attack: declension({
+        attack: {
 
             nominative: "Atak",
             genitive: "ataku",
@@ -256,8 +232,8 @@ const polish: Language = {
             locative: "ataku",
             vocative: "ataku",
 
-        }),
-        skill: declension({
+        },
+        skill: {
 
             nominative: "Umiejętność",
             genitive: "umiejętności",
@@ -267,8 +243,8 @@ const polish: Language = {
             locative: "umiejętności",
             vocative: "umiejętności",
 
-        }),
-        spell: declension({
+        },
+        spell: {
 
             nominative: "Zaklęcie",
             genitive: "zaklęcia",
@@ -278,8 +254,8 @@ const polish: Language = {
             locative: "zaklęciu",
             vocative: "zaklęcie",
 
-        }),
-        passive: declension({
+        },
+        passive: {
 
             nominative: "Pasywny efekt",
             genitive: "pasywnego efektu",
@@ -289,12 +265,104 @@ const polish: Language = {
             locative: "pasywnym efekcie",
             vocative: "pasywny efekcie",
 
+        },
+
+    },
+    effects: {
+
+        // Misc
+        mix: verbs => joinEnd(verbs, ", ", " i "),
+
+        // Effects
+        damage: amount => ({
+
+            // We'd need to know the amount of damage to provide an always-correct declension.
+            // Simply, we just use an abbreviation instead of the normal noun.
+            nominative: `${amount} pkt obrażeń`,
+            genitive: `${amount} pkt obrażeń`,
+            dative: `${amount} pkt obrażeń`,
+            accusative: `${amount} pkt obrażeń`,
+            instrumental: `${amount} pkt obrażeń`,
+            locative: `${amount} pkt obrażeń`,
+            vocative: `${amount} pkt obrażeń`,
+
+            impersonal: `otrzymać ${amount} pkt obrażeń`,
+            singular: {
+                first: `otrzymałem ${amount} pkt obrażeń`,
+                second: `otrzymałeś ${amount} pkt obrażeń`,
+                third: `otrzymał ${amount} pkt obrażeń`,
+            },
+            plural: {
+                first: `otrzymaliśmy ${amount} pkt obrażeń`,
+                second: `otrzymaliście ${amount} pkt obrażeń`,
+                third: `otrzymali ${amount} pkt obrażeń`,
+            },
+
+        }),
+
+    },
+    attacks: {
+
+        // Punch
+        punch: {
+
+            nominative: "Cios",
+            genitive: "ciosu",
+            dative: "ciosowi",
+            accusative: "cios",
+            instrumental: "ciosem",
+            locative: "ciosie",
+            vocative: "ciosie"
+
+        },
+        punchSomeone: target => ({
+
+            impersonal: `walnąć ${target.genitive}`,
+            singular: {
+                first: `walnąłem ${target.genitive}`,
+                second: `walnąłeś ${target.genitive}`,
+                third: `walnął ${target.genitive}`,
+            },
+            plural: {
+                first: `walnęliśmy ${target.genitive}`,
+                second: `walnęliście ${target.genitive}`,
+                third: `walnęli ${target.genitive}`,
+            }
+
+        }),
+
+        // Bite
+        bite: {
+
+            nominative: "Ugryzienie",
+            genitive: "ugryzienia",
+            dative: "ugryzieniu",
+            accusative: "ugryzienie",
+            instrumental: "ugryzieniem",
+            locative: "ugryzieniu",
+            vocative: "ugryzieniu",
+
+        },
+        biteSomeone: target => ({
+
+            impersonal: `ugryźć ${target.genitive}`,
+            singular: {
+                first: `ugryzłem ${target.genitive}`,
+                second: `ugryzłeś ${target.genitive}`,
+                third: `ugryzł ${target.genitive}`,
+            },
+            plural: {
+                first: `ugryźliśmy ${target.genitive}`,
+                second: `ugryźliście ${target.genitive}`,
+                third: `ugryźli ${target.genitive}`
+            },
+
         }),
 
     },
     weapons: {
 
-        oldBow: declension({
+        oldBow: {
             nominative: "Stary łuk",
             genitive: "starego łuku",
             dative: "staremu łukowi",
@@ -302,11 +370,11 @@ const polish: Language = {
             instrumental: "starym łukiem",
             locative: "starym łuku",
             vocative: "stary łuku"
-        })
+        }
 
     },
     areas: {
-        wildForest: declension({
+        wildForest: {
             nominative: "Dziki Las",
             genitive: "Dzikiego Lasu",
             dative: "Dzikiemu Lasowi",
@@ -314,13 +382,13 @@ const polish: Language = {
             instrumental: "Dzikim Lasem",
             locative: "Dzikim Lesie",
             vocative: "Dziki Lesie"
-        })
+        }
     },
     enemies: {
 
         // Wild forest
         // They all have the same kind of declension. Perhaps this could be shortened with some function.
-        rabbit: declension({
+        rabbit: {
             nominative: "Zając",
             genitive: "zająca",
             dative: "zającowi",
@@ -328,8 +396,8 @@ const polish: Language = {
             instrumental: "zającem",
             locative: "zającu",
             vocative: "zającu"
-        }),
-        boar: declension({
+        },
+        boar: {
             nominative: "Dzik",
             genitive: "dzika",
             dative: "dzikowi",
@@ -337,8 +405,8 @@ const polish: Language = {
             instrumental: "dzikiem",
             locative: "dziku",
             vocative: "dziku"
-        }),
-        deer: declension({
+        },
+        deer: {
             nominative: "Jeleń",
             genitive: "jelenia",
             dative: "jeleniowi",
@@ -346,8 +414,8 @@ const polish: Language = {
             instrumental: "jeleniem",
             locative: "jeleniu",
             vocative: "jeleniu",
-        }),
-        wolf: declension({
+        },
+        wolf: {
             nominative: "Wilk",
             genitive: "wilka",
             dative: "wilkowi",
@@ -355,11 +423,36 @@ const polish: Language = {
             instrumental: "wilkiem",
             locative: "wilku",
             vocative: "wilku"
-        }),
+        },
 
     },
-    busy: action => `W tym momencie ${action.singular!.second}. Zakończ to by kontynuować.`,
+    busy: action => `W tym momencie ${action.singular.second}. Zakończ to by kontynuować.`,
     return: action => `Kontynuuj ${action.accusative}`,
+
+};
+
+type PolishDeclension<T = string> = Declension<T> & {
+
+    /** 1\. Mianownik (kto, co) */
+    nominative: T,
+
+    /** 2\. Dopełniacz (kogo, czego) */
+    genitive?: T,
+
+    /** 3\. Celownik (komu, czemu) */
+    dative?: T,
+
+    /** 4\. Biernik (kogo, co) */
+    accusative?: T,
+
+    /** 5\. Narzędnik (z kim, z czym) */
+    instrumental?: T,
+
+    /** 6\. Miejscownik (o kim, o czym) */
+    locative?: T,
+
+    /** 7\. Wołacz */
+    vocative?: T,
 
 };
 

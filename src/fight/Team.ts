@@ -49,7 +49,7 @@ export default class Team extends ArrayProxy<Fighter> {
         if (fighter.currentIntelligence?.fight === this.fight) return;
 
         // Assign the intelligence
-        fighter.currentIntelligence = new fighter.intelligence(fighter, this, this.fight);
+        fighter.currentIntelligence = new fighter.intelligence(fighter, this.thisProxy, this.fight);
 
     }
 

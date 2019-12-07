@@ -1,10 +1,10 @@
-import { Attributes, Abilities, AttributePoints, AbilityPoints, Stats } from "../Stats";
+import { Attributes, Abilities, Stats } from "../Stats";
 import { randomRange } from "../utils";
 import Fighter from "./Fighter";
 import Language, { Declension } from "../languages/Language";
-import Intelligence, { NewIntelligence } from "../intelligence/Intelligence";
+import { NewIntelligence } from "../intelligence/Intelligence";
 import OnlyAttack from "../intelligence/OnlyAttack";
-import Fight from "./Fight";
+import Grant from "../items/Grant";
 
 export abstract class InputEnemy {
 
@@ -14,12 +14,17 @@ export abstract class InputEnemy {
     name!: (lang: Language) => Declension;
 
     /**
-     * Level range of the enemy
+     * Level range of the enemy.
      */
     levelRange!: [number, number];
 
     /**
-     * Intelligence type of the enemy
+     * Grants the enemy can use.
+     */
+    grants!: Grant[];
+
+    /**
+     * Intelligence type of the enemy.
      */
     intelligence?: NewIntelligence;
 

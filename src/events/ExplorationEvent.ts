@@ -2,7 +2,7 @@ import Event from "./Event";
 import Area from "../Area";
 import Language from "../languages/Language";
 import Context from "../Context";
-import { CharacterContext } from "../checks";
+import { CharacterContext, ExclusiveContext } from "../checks";
 import areas from "../data/areas";
 import { randomRange } from "../utils";
 import Enemy, { InputEnemy } from "../fight/Enemy";
@@ -105,7 +105,7 @@ export default class ExplorationEvent extends Event {
     /**
      * Add general data to the exploration, such as the title, progress and tips.
      */
-    fillContext(context: CharacterContext) {
+    fillContext(context: ExclusiveContext<this>) {
 
         // Display the data
         context.title = this.step <= this.area.length

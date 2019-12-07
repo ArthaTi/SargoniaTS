@@ -1,11 +1,14 @@
 import Language from "../languages/Language";
 import Enemy, { InputEnemy } from "../fight/Enemy";
 import { Attributes, Abilities } from "../Stats";
+import { bite } from "./attacks";
 
-export const rabbit = <InputEnemy>{
+export const rabbit: InputEnemy = {
 
     name: (lang: Language) => lang.enemies.rabbit,
     levelRange: [1, 2],
+
+    grants: [bite],
 
     attributes: new Attributes({
         health: 20,
@@ -31,10 +34,13 @@ export const rabbit = <InputEnemy>{
 
 };
 
-export const boar = <InputEnemy>{
+export const boar: InputEnemy = {
 
     name: (lang: Language) => lang.enemies.boar,
     levelRange: [2, 4],
+
+    // TODO: charge
+    grants: [bite],
 
     attributes: new Attributes({
         health: 40,
@@ -61,10 +67,13 @@ export const boar = <InputEnemy>{
 
 };
 
-export const deer = <InputEnemy>{
+export const deer: InputEnemy = {
 
     name: (lang: Language) => lang.enemies.deer,
     levelRange: [3, 5],
+
+    // TODO: Replace with charge and pushing
+    grants: [bite],
 
     attributes: new Attributes({
         health: 80,
@@ -92,10 +101,13 @@ export const deer = <InputEnemy>{
 
 };
 
-export const wolf = <InputEnemy>{
+export const wolf: InputEnemy = {
 
     name: (lang: Language) => lang.enemies.wolf,
     levelRange: [4, 6],
+
+    // TODO: Add some teamwork grants
+    grants: [bite],
 
     attributes: new Attributes({
         health: 60,

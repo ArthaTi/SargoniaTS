@@ -7,6 +7,7 @@ import { AttributePoints, AbilityPoints, Attributes, Abilities } from "./Stats";
 import Fighter from "./fight/Fighter";
 import Team from "./fight/Team";
 import HumanIntel from "./intelligence/Human";
+import Inventory from "./Inventory";
 
 @Entity()
 export default class Character extends BaseEntity implements Fighter {
@@ -52,6 +53,12 @@ export default class Character extends BaseEntity implements Fighter {
      */
     @Column("bigint")
     lastUse: number = Date.now();
+
+    /**
+     * Inventory of the player
+     */
+    @Column(_type => Inventory)
+    inventory: Inventory = new Inventory();
 
     /**
      * Current events.

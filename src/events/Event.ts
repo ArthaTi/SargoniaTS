@@ -1,6 +1,6 @@
-import Language, { DeclensionInflection } from "../languages/Language";
+import Language, { Declension, Inflection } from "../languages/Language";
 import * as crypto from "crypto";
-import { CharacterContext } from "../checks";
+import { CharacterContext, ExclusiveContext } from "../checks";
 
 export default abstract class Event {
 
@@ -27,7 +27,7 @@ export default abstract class Event {
     /**
      * Status text of the playing player.
      */
-    abstract status(language: Language): DeclensionInflection;
+    abstract status(language: Language): Declension & Inflection;
 
     /**
      * Fill general data, such as the title and progress of the current event.
@@ -37,7 +37,7 @@ export default abstract class Event {
      * **Warning:** In case a children event starts (such as the `FightEvent`) with this event as a parent, this
      * function will be called anyway. Make sure to check the event before adding any actions.
      */
-    fillContext(context: CharacterContext) {
+    fillContext(context: ExclusiveContext<this>) {
 
         // Require the primary action to activate
         if (this.primaryAction !== context.url[0]) return;

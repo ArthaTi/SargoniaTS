@@ -127,7 +127,7 @@ export default (context: Context) => {
                             style: show(context.text)
                         },
 
-                        escapeHTML(context.text).replace("\n", wrap("br"))
+                        escapeHTML(context.text).replace(/\n/g, wrap("br"))
 
                     ),
 
@@ -202,16 +202,23 @@ export default (context: Context) => {
                                             class: [
                                                 link.inline ? "inline" : "",
                                                 link.header ? "header" : "",
+                                                link.progress !== undefined ? "progress-bar" : "",
                                             ].join(" ")
                                         },
-                                        link.text
+                                        link.text,
+                                        link.progress !== undefined
+                                            ? wrap("span", {
+                                                class: "progress-fill",
+                                                style: `width:${link.progress*100}%`
+                                            })
+                                            : "",
                                     );
 
                                 // Item is an array
                                 if (item instanceof Array) {
 
                                     // Map each link and wrap in a div
-                                    return wrap("div", { class: "row" },
+                                    return wrap("div", { class: "column" },
                                         item.map(makeLink)
                                     );
 
